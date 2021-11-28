@@ -19,7 +19,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     static final int WHITE = 1, GRAY = -1, BLACK = 0;
 
     private DirectedWeightedGraph g;
-
+    private DirectedWeightedGraph reverseGraph;
 
     @Override
     public void init(DirectedWeightedGraph g) {
@@ -65,69 +65,101 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     @Override
     public boolean isConnected() {
 
-        for (int i = 0; i < g.nodeSize(); i++) {
-            for (int j = 0; j < g.nodeSize(); j++) {
-                ArrayList<NodeData> temp = new ArrayList<NodeData>();
-                if (i != j && shortestPath(i, j) == null) {
-                    return false;
+        System.out.println("SCC ---->" +SCC());
+        if (SCC().size() == 1)
+            return true;
 
 
-                }
+        return false;
+    }
 
 
+    public List<Set<NodeData>> SCC() {
+
+        Deque<NodeData> stack = new ArrayDeque<>();
+        Set<NodeData> visited = new HashSet<>();
+
+
+        for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
+            NodeData node = it.next();
+            if (visited.contains(node)) {
+                continue;
             }
+
+            DFS(node, visited, stack);
+        }
+
+        this.reverseGraph = reverse();
+        visited.clear();
+        List<Set<NodeData>> components = new ArrayList<>();
+        while (!stack.isEmpty()) {
+
+            NodeData n = reverseGraph.getNode(stack.poll().getKey());
+            if (visited.contains(n)) {
+                continue;
+            }
+            //storing the one scc
+            Set<NodeData> set = new HashSet<>();
+
+            DFSForReverseGraph(n, visited, set);
+            components.add(set);
+
+
         }
 
 
-        return true;
+        return components;
+    }
+
+    //second DFS on reversed Graph
+    private void DFSForReverseGraph(NodeData n, Set<NodeData> visited, Set<NodeData> set) {
+        visited.add(n);
+        set.add(n);
+        for (Iterator<EdgeData> it = reverseGraph.edgeIter(n.getKey()); it.hasNext(); ) {
+            EdgeData e = it.next();
+            NodeData curr = reverseGraph.getNode(e.getDest());
+            if (visited.contains(curr)) {
+                continue;
+            }
+            DFSForReverseGraph(curr, visited, set);
+        }
+
 
     }
 
-//    @Override
-//    public double shortestPathDist(int src, int dest) {
-//
-//
-//        HashMap<Integer, NodeData> dist = new HashMap<>();
-//        for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
-//            NodeData nodeData = it.next();
-//            nodeData.setWeight(Integer.MAX_VALUE);
-//
-//        }
-//
-//        NodeData startingNode = g.getNode(src);
-//        startingNode.setWeight(0);
-//
-//        dist.put(src, startingNode);
-//
-//        while (!dist.isEmpty()) {
-//
-//            //go to min wighted node that adj to src node
-//            NodeData currNode = this.MinWeightedNode(dist);
-//            if (currNode.getKey() == dest) {
-//                break;
-//            }
-//
-//            int currKey = currNode.getKey();
-//            double currWeight = currNode.getWeight();
-//            dist.remove(currKey);
-//
-//            for (Iterator<EdgeData> it = g.edgeIter(currKey); it.hasNext(); ) {
-//                EdgeData e = it.next();
-//                Integer neighbor = e.getDest();
-//
-//                NodeData neighborNode = g.getNode(neighbor);
-//                double CurrNodeAndEdgeWeight = g.getEdge(currKey, neighbor).getWeight() + currWeight;
-//                if (CurrNodeAndEdgeWeight < neighborNode.getWeight()) {
-//                    neighborNode.setWeight(CurrNodeAndEdgeWeight);
-//                    dist.put(neighbor, neighborNode);
-//                }
-//            }
-//
-//        }
-//
-//
-//        return (g.getNode(dest).getWeight() == Integer.MAX_VALUE) ? -1 : g.getNode(dest).getWeight();
-//    }
+    private DirectedWeightedGraph reverse() {
+        DirectedWeightedGraph reverseGraph = new DirectedWeightedGraphImpl();
+
+        for (Iterator<EdgeData> it = g.edgeIter(); it.hasNext(); ) {
+            EdgeData edge = it.next();
+//            System.out.println("No reverse: " + edge);
+
+            reverseGraph.addNode(g.getNode(edge.getSrc()));
+            reverseGraph.addNode(g.getNode(edge.getDest()));
+            reverseGraph.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
+
+        }
+
+        return reverseGraph;
+    }
+    //First DFS
+    private void DFS(NodeData node, Set<NodeData> visited, Deque<NodeData> stack) {
+
+        visited.add(node);
+        for (Iterator<EdgeData> it = g.edgeIter(node.getKey()); it.hasNext(); ) {
+
+            EdgeData e = it.next();
+
+            NodeData curr = g.getNode(e.getDest());
+            if (visited.contains(curr)) {
+                continue;
+            }
+            DFS(curr, visited, stack);
+        }
+
+        stack.offerFirst(node);
+
+    }
 
     @Override
     public double shortestPathDist(int src, int dest) {
@@ -141,7 +173,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         }
 
 
-        return shortestPathList.get(shortestPathList.size()-1).getWeight();
+        return shortestPathList.get(shortestPathList.size() - 1).getWeight();
 
     }
 
@@ -203,16 +235,54 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return minNode;
     }
 
+    public double maxInThePath(NodeData nodeData) {
+        double max = Integer.MIN_VALUE;
+
+        for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
+            NodeData node = it.next();
+            if (nodeData.getKey() != node.getKey()) {
+                double shortestP = shortestPathDist(nodeData.getKey(), node.getKey());
+                if (max < shortestP) {
+                    max = shortestP;
+
+
+                }
+
+
+            }
+
+        }
+
+        return max;
+
+    }
 
     @Override
     public NodeData center() {
+        if (g.nodeSize() == 0) {
+            return null;
+        }
 
-        return null;
+        double min = Integer.MAX_VALUE;
+        NodeData ans = null;
+
+        for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
+            NodeData node = it.next();
+            double temp = maxInThePath(node);
+            if (temp < min) {
+                min = temp;
+                ans = node;
+
+            }
+
+        }
+        return ans;
     }
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         return null;
+
 
     }
 
@@ -243,17 +313,41 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return false;
     }
 
+    public AlgorithmsImpl(DirectedWeightedGraph g){
+        this.g = g;
+    }
 
     public static void main(String[] args) {
         DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
+        g.addNode(new NodeDataImpl(1, null));
+        g.addNode(new NodeDataImpl(2, null));
+        g.addNode(new NodeDataImpl(3, null));
+        g.addNode(new NodeDataImpl(4, null));
+        g.addNode(new NodeDataImpl(5, null));
+        g.addNode(new NodeDataImpl(6, null));
+        g.addNode(new NodeDataImpl(7, null));
+        g.connect(1,2,0);
+        g.connect(2,3,0);
+        g.connect(3,1,0);
+        g.connect(3,5,0);
+        g.connect(5,6,0);
+        g.connect(6,4,0);
+        g.connect(4,5,0);
+        g.connect(7,6,0);
+        AlgorithmsImpl ag = new AlgorithmsImpl(g);
 
-        AlgorithmsImpl ag = new AlgorithmsImpl();
+        System.out.println("ifConnected: " + ag.isConnected());
 
-        System.out.println(ag.getGraph());
-        ag.load("G1.json");
-        System.out.println(ag.getGraph());
-        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
-        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
+
+//        AlgorithmsImpl ag = new AlgorithmsImpl();
+
+//        System.out.println(ag.getGraph());
+//        ag.load("G1.json");
+//        System.out.println(ag.getGraph());
+//        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
+//        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
+//        System.out.println("Center: ->" + ag.center());
+//        System.out.println("ifConnected: " + ag.isConnected());
     }
 
 }
