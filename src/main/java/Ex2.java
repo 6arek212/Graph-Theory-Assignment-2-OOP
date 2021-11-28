@@ -52,16 +52,17 @@ public class Ex2 {
         //alg.getGraph().removeNode(0);
 
         //remove edge
-        alg.getGraph().removeEdge(0,1);
-        alg.getGraph().removeEdge(0,21);
-        alg.getGraph().removeEdge(0,16);
-        alg.getGraph().removeEdge(1,0);
-        alg.getGraph().removeEdge(21,0);
-        alg.getGraph().removeEdge(16,0);
+//        alg.getGraph().removeEdge(0,1);
+//        alg.getGraph().removeEdge(0,21);
+//        alg.getGraph().removeEdge(0,16);
+//        alg.getGraph().removeEdge(1,0);
+//        alg.getGraph().removeEdge(21,0);
+//        alg.getGraph().removeEdge(16,0);
 
         //connect
         //alg.getGraph().connect(16,0,50);
         DisplayView v = new DisplayView(alg, j.getHeight(), j.getWidth());
+        v.fullGraph();
         j.add(v);
 
     }

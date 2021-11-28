@@ -11,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ *
+ *      Simple UI for presenting the graph
+ *
+ *
+ */
 public class DisplayView extends Canvas {
     private DirectedWeightedGraphAlgorithms graphAlg;
     private Range r1x;
@@ -67,14 +74,34 @@ public class DisplayView extends Canvas {
                 break;
 
             case PAINT_SHORTEST:
-                paintShortestPath(this.src, this.dest);
+                paintShortestPath();
                 break;
         }
     }
 
 
-    public void paintFullGraph() {
-        this.mode = PAINT_GRAPH;
+    /**
+     * for painting shortest path between src and dest
+     *
+     * @param src
+     * @param dest
+     */
+    public void paintShortestPath(int src,int dest){
+        mode = PAINT_SHORTEST;
+        this.src = src;
+        this.dest = dest;
+    }
+
+
+    /**
+     * paint full graph
+     */
+    public void fullGraph(){
+        mode = PAINT_GRAPH;
+    }
+
+
+    private void paintFullGraph() {
         List<EdgeData> ed = new ArrayList<>();
         Iterator<EdgeData> itEdge = graphAlg.getGraph().edgeIter();
         while (itEdge.hasNext()) {
@@ -90,12 +117,12 @@ public class DisplayView extends Canvas {
     }
 
 
-    public void paintShortestPath(int src, int dest) {
-        mode = PAINT_SHORTEST;
-        this.src = src;
-        this.dest = dest;
 
+    public void paintShortestPath() {
         List<NodeData> path = graphAlg.shortestPath(src, dest);
+        if (path == null)
+            return;
+
         List<EdgeData> edges = new ArrayList<>();
         for (int i = 0; i < path.size() - 1; i++) {
             edges.add(graphAlg.getGraph().getEdge(path.get(i).getKey(), path.get(i + 1).getKey()));

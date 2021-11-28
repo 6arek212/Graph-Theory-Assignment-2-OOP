@@ -50,7 +50,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return adj;
     }
 
-    int cnt = 0;
 
     private void dfsVisit(NodeData node, List<NodeData> nodesList, boolean reversed) {
         List<EdgeData> adj;
@@ -108,7 +107,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         while (iterator.hasNext()) {
             nodes.add(iterator.next());
         }
-
 //        getGraph().removeEdge(0, 1);
 //        getGraph().removeEdge(0, 21);
 //        getGraph().removeEdge(0, 16);
@@ -119,7 +117,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
- 
+
 
     private List<EdgeData> getAdj(int src) {
         Iterator<EdgeData> iterator = graph.edgeIter(src);
