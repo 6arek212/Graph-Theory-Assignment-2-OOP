@@ -5,8 +5,6 @@ import com.google.gson.Gson;
 import json_models.DirectedWeightedGraphJson;
 import models.EdgeDataImpl;
 import models.NodeDataImpl;
-
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Paths;
