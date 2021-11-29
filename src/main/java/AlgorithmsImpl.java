@@ -15,12 +15,11 @@ import java.util.*;
 
 public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     private DirectedWeightedGraph graph;
-    private final String defaultJsonFile = "G1.json";
 
 
     //as default load G1.json
-    public AlgorithmsImpl() {
-        load(defaultJsonFile);
+    public AlgorithmsImpl(String file) {
+        load(file);
     }
 
 
@@ -39,56 +38,60 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return new DirectedWeightedGraphImpl(this.graph);
     }
 
-    private List<EdgeData> getInvertAdj(int src) {
-        Iterator<EdgeData> iterator = graph.edgeIter();
-        List<EdgeData> adj = new ArrayList<>();
-        while (iterator.hasNext()) {
-            EdgeData d = iterator.next();
-            if (d.getDest() == src)
-                adj.add(d);
+    /**
+     * get the transpose of the graph
+     * complexity  O(V+E)
+     */
+    private DirectedWeightedGraph reverse() {
+        DirectedWeightedGraph reverseGraph = new DirectedWeightedGraphImpl();
+        Iterator<EdgeData> it = graph.edgeIter();
+        while (it.hasNext()) {
+            EdgeData edge = it.next();
+            if (reverseGraph.getNode(edge.getSrc()) == null)
+                reverseGraph.addNode(graph.getNode(edge.getSrc()));
+            if (reverseGraph.getNode(edge.getDest()) == null)
+                reverseGraph.addNode(graph.getNode(edge.getDest()));
+            reverseGraph.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
         }
-        return adj;
+
+        Iterator<NodeData> iterator = graph.nodeIter();
+        while (iterator.hasNext()) {
+            NodeData nodeData = iterator.next();
+            if (reverseGraph.getNode(nodeData.getKey()) == null) {
+                reverseGraph.addNode(nodeData);
+            }
+        }
+        return reverseGraph;
     }
 
 
-    private void dfsVisit(NodeData node, List<NodeData> nodesList, boolean reversed) {
+    private void dfsVisit(DirectedWeightedGraph g, NodeData node, List<NodeData> nodesList) {
         List<EdgeData> adj;
-        if (reversed)
-            adj = getInvertAdj(node.getKey());
-        else
-            adj = getAdj(node.getKey());
-
-
+        adj = getAdj(g, node.getKey());
         node.setTag(NodeDataImpl.GRAY);
 
         for (EdgeData ed : adj) {
-            NodeData nd;
-            if (reversed)
-                nd = graph.getNode(ed.getSrc());
-            else
-                nd = graph.getNode(ed.getDest());
+            NodeData nd = g.getNode(ed.getDest());
             if (nd.getTag() == NodeDataImpl.WHITE) {
-                dfsVisit(nd, nodesList, reversed);
+                dfsVisit(g, nd, nodesList);
             }
         }
         nodesList.add(0, node);
         node.setTag(NodeDataImpl.BLACK);
     }
 
-    private List<NodeData> dfs(List<NodeData> nodesList, boolean reversed) {
+    private List<NodeData> dfs(DirectedWeightedGraph g, List<NodeData> nodesList, boolean reversed) {
         for (NodeData d : nodesList) {
             d.setTag(NodeDataImpl.WHITE);
         }
-
         List<NodeData> p = new ArrayList<>();
-        boolean visitAll = true;
         for (NodeData d : nodesList) {
-            if (d.getTag() == NodeDataImpl.WHITE && visitAll)
-                dfsVisit(d, p, reversed);
-
+            if (d.getTag() == NodeDataImpl.WHITE)
+                dfsVisit(g, d, p);
             if (reversed)
-                visitAll = false;
+                return p;
         }
+
         return p;
     }
 
@@ -107,20 +110,12 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         while (iterator.hasNext()) {
             nodes.add(iterator.next());
         }
-//        getGraph().removeEdge(0, 1);
-//        getGraph().removeEdge(0, 21);
-//        getGraph().removeEdge(0, 16);
-//        getGraph().removeEdge(1, 0);
-//        getGraph().removeEdge(21, 0);
-//        getGraph().removeEdge(16, 0);
-        return dfs(dfs(nodes, false), true).size() == nodes.size();
+        return dfs(reverse(), dfs(graph, nodes, false), true).size() == graph.nodeSize();
     }
 
 
-
-
-    private List<EdgeData> getAdj(int src) {
-        Iterator<EdgeData> iterator = graph.edgeIter(src);
+    private List<EdgeData> getAdj(DirectedWeightedGraph g, int src) {
+        Iterator<EdgeData> iterator = g.edgeIter(src);
         List<EdgeData> adj = new ArrayList<>();
         while (iterator.hasNext()) {
             adj.add(iterator.next());
@@ -134,22 +129,20 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         List<NodeData> path = shortestPath(src, dest);
         if (path == null)
             return -1;
-        return pathCost(path);
+        return path.get(path.size() - 1).getWeight();
     }
 
-    private double pathCost(List<NodeData> path) {
-        double sum = 0;
-        for (int i = 0; i < path.size() - 1; i++) {
-            sum += graph.getEdge(path.get(i).getKey(), path.get(i + 1).getKey()).getWeight();
-        }
 
-        return sum;
-    }
-
+    /**
+     * Dijkstra algorithm O(|V|^2)
+     *
+     * @param src  - start node
+     * @param dest - end (target) node
+     * @return
+     */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        DirectedWeightedGraphImpl g = new DirectedWeightedGraphImpl(graph);
-        Iterator<NodeData> iterator = g.nodeIter();
+        Iterator<NodeData> iterator = graph.nodeIter();
 
         while (iterator.hasNext()) {
             NodeData d = iterator.next();
@@ -161,8 +154,8 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             }
         }
 
-        NodeData[] dist = new NodeData[g.nodeSize()];
-        dist[src] = g.getNode(src);
+        NodeData[] dist = new NodeData[graph.nodeSize()];
+        dist[src] = graph.getNode(src);
 
         PriorityQueue<NodeData> nodeQ = new PriorityQueue<>((NodeData o1, NodeData o2) -> {
             if (o1.getWeight() < o2.getWeight())
@@ -171,13 +164,13 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                 return 1;
             return 0;
         });
-        nodeQ.add(g.getNode(src));
+        nodeQ.add(graph.getNode(src));
 
         while (!nodeQ.isEmpty()) {
             NodeData node = nodeQ.poll();
 
-            for (EdgeData edge : getAdj(node.getKey())) {
-                NodeData connectedto = g.getNode(edge.getDest());
+            for (EdgeData edge : getAdj(graph, node.getKey())) {
+                NodeData connectedto = graph.getNode(edge.getDest());
                 if (connectedto.getTag() == NodeDataImpl.WHITE) {
                     if (node.getWeight() + edge.getWeight() < connectedto.getWeight()) {
                         connectedto.setWeight(node.getWeight() + edge.getWeight());
@@ -190,16 +183,16 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         }
 
 
-        if (g.getNode(dest).getWeight() == Double.MAX_VALUE)
+        if (graph.getNode(dest).getWeight() == Double.MAX_VALUE)
             return null;
 
         List<NodeData> path = new ArrayList<>();
-        NodeData node = g.getNode(dest);
+        NodeData node = graph.getNode(dest);
         while (node.getKey() != src) {
             path.add(0, dist[node.getKey()]);
             node = dist[node.getKey()];
         }
-        path.add(g.getNode(dest));
+        path.add(graph.getNode(dest));
 
         return path;
     }
@@ -239,6 +232,15 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    //    private double pathCost(List<NodeData> path) {
+//        double sum = 0;
+//        for (int i = 0; i < path.size() - 1; i++) {
+//            sum += graph.getEdge(path.get(i).getKey(), path.get(i + 1).getKey()).getWeight();
+//        }
+//
+//        return sum;
+//    }
+//
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         //TODO: NEEDS SOME WORK !
@@ -259,10 +261,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                 }
             }
 
-            if (pathCost(newPath) < min) {
-                min = sum;
-                path = newPath;
-            }
         }
 
 
@@ -298,48 +296,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
 
     public static void main(String[] args) {
-        AlgorithmsImpl ag = new AlgorithmsImpl();
+        AlgorithmsImpl ag = new AlgorithmsImpl("G1.json");
         System.out.println(ag.isConnected());
-
-        //ag.save("./aa.txt");
-
-        //ag.load("G1.json");
-        //Iterator<EdgeData> iterator = ag.graph.edgeIter(1);
-
-//        while (iterator.hasNext()) {
-//            EdgeData d = iterator.next();
-//            System.out.println(d.getSrc() + "--->" + d.getDest());
-//        }
-//
-//
-//        List<NodeData> list = new ArrayList<>();
-//
-//
-//        int cnt = 0;
-//        Iterator<NodeData> iterator2 = ag.graph.nodeIter();
-//        while (iterator2.hasNext()) {
-//            NodeData d = iterator2.next();
-//            if (cnt < 9)
-//                list.add(d);
-//            cnt++;
-//        }
-//
-
-
-//        System.out.println(ag.shortestPathDist(0, 5));
-//        System.out.println(ag.isConnected());
-
-
-        //ag.tsp(list);
-
-        //System.out.println(ag.shortestPathDist(0,5));
-//        System.out.println(ag.shortestPathDist(0,1));
-//        System.out.println(ag.shortestPathDist(0,2));
-//        System.out.println(ag.shortestPathDist(0, 3));
-//        System.out.println(ag.shortestPathDist(0,4));
-//        System.out.println(ag.shortestPathDist(0,5));
-//        System.out.println(ag.shortestPathDist(0,6));
-
-
     }
 }

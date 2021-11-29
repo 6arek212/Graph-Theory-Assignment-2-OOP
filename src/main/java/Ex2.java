@@ -1,10 +1,13 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
+import models.GeoLocationImpl;
+import models.NodeDataImpl;
 import ui.DisplayView;
 
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -17,8 +20,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
-        AlgorithmsImpl ag = new AlgorithmsImpl();
-        ag.load(json_file);
+        AlgorithmsImpl ag = new AlgorithmsImpl(json_file);
         return ag.getGraph();
     }
 
@@ -30,8 +32,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
-        AlgorithmsImpl ag = new AlgorithmsImpl();
-        ag.load(json_file);
+        AlgorithmsImpl ag = new AlgorithmsImpl(json_file);
         return ag;
     }
 
@@ -44,20 +45,19 @@ public class Ex2 {
         DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         JFrame j = new JFrame();
         j.setBackground(Color.WHITE);
-        j.setSize(500, 400);
+        j.setSize(800, 600);
         j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         j.setVisible(true);
 
-        //remove node
-        //alg.getGraph().removeNode(0);
 
         //remove edge
-//        alg.getGraph().removeEdge(0,1);
-//        alg.getGraph().removeEdge(0,21);
-//        alg.getGraph().removeEdge(0,16);
-//        alg.getGraph().removeEdge(1,0);
-//        alg.getGraph().removeEdge(21,0);
-//        alg.getGraph().removeEdge(16,0);
+        alg.getGraph().removeEdge(0,1);
+        alg.getGraph().removeEdge(0,21);
+        alg.getGraph().removeEdge(0,16);
+        alg.getGraph().removeEdge(1,0);
+        alg.getGraph().removeEdge(21,0);
+        alg.getGraph().removeEdge(16,0);
+
 
         //connect
         //alg.getGraph().connect(16,0,50);
@@ -69,6 +69,7 @@ public class Ex2 {
 
 
     public static void main(String[] args) {
-        runGUI("G1.json");
+        runGUI("G3.json");
+
     }
 }

@@ -3,6 +3,7 @@ package models;
 import api.GeoLocation;
 import api.NodeData;
 import json_models.NodeDataJson;
+
 import java.util.List;
 
 
@@ -16,13 +17,11 @@ public class NodeDataImpl implements NodeData {
     private GeoLocation location;
     private double weight;
     private String info;
-    private List<NodeData> adj;
 
-    public NodeDataImpl(NodeDataJson nd ) {
+    public NodeDataImpl(NodeDataJson nd) {
         this.key = nd.getKey();
         this.tag = NodeDataImpl.WHITE;
         this.location = new GeoLocationImpl(nd.getLocationString());
-        this.adj = adj;
         this.info = null;
     }
 
@@ -33,7 +32,11 @@ public class NodeDataImpl implements NodeData {
         this.info = node.getInfo();
     }
 
-
+    public NodeDataImpl(int key, GeoLocation g) {
+        this.key = key;
+        this.tag = NodeDataImpl.WHITE;
+        this.location = g;
+    }
 
     @Override
     public int getKey() {
@@ -88,7 +91,6 @@ public class NodeDataImpl implements NodeData {
                 ", location=" + location +
                 ", weight=" + weight +
                 ", info='" + info + '\'' +
-                ", adj=" + adj +
                 '}';
     }
 }
