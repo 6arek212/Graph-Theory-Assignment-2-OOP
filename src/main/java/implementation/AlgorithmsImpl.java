@@ -139,6 +139,11 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             reverseGraph.connect(edge.getDest(), edge.getSrc(), edge.getWeight());
 
         }
+        for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
+            NodeData nodeData = it.next();
+            reverseGraph.addNode(nodeData);
+
+        }
 
         return reverseGraph;
     }
@@ -248,13 +253,9 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
                 }
 
-
             }
-
         }
-
         return max;
-
     }
 
     @Override
@@ -333,21 +334,24 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         g.connect(5,6,0);
         g.connect(6,4,0);
         g.connect(4,5,0);
-        g.connect(7,6,0);
+        g.connect(7,7,0);
         AlgorithmsImpl ag = new AlgorithmsImpl(g);
 
         System.out.println("ifConnected: " + ag.isConnected());
-
+        ag.getGraph().connect(6,7 , 0);
+        ag.getGraph().connect(5,3, 0);
+        System.out.println("ifConnected: " + ag.isConnected());
 
 //        AlgorithmsImpl ag = new AlgorithmsImpl();
-
+//
 //        System.out.println(ag.getGraph());
 //        ag.load("G1.json");
+//        ag.getGraph().removeEdge(2,3);
 //        System.out.println(ag.getGraph());
 //        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
 //        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
 //        System.out.println("Center: ->" + ag.center());
-//        System.out.println("ifConnected: " + ag.isConnected());
+//        System.out.println("isConnected: " + ag.isConnected());
     }
 
 }

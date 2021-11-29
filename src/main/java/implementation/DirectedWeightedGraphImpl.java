@@ -20,7 +20,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     private HashMap<Integer, NodeData> Nodes = new HashMap<Integer, NodeData>();
     private HashMap<Integer, HashMap<Integer, EdgeData>> Edges = new HashMap<Integer, HashMap<Integer, EdgeData>>();
-
+    private HashMap<Integer , ArrayList< Integer>> rankIn =   new HashMap<>();
     //count the operations on graph object
     private int ModeCounter;
     private int EdgeCounter;
@@ -56,7 +56,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
      if(getNode(n.getKey()) == null) {
          Nodes.put(n.getKey(), n);
-
+         rankIn.put(n.getKey() , new ArrayList<>());
          HashMap<Integer, EdgeData> new_EdgeNode = new HashMap<>();
          Edges.put(n.getKey(), new_EdgeNode);
          ModeCounter++;
@@ -71,6 +71,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
         if (getEdge(src, dest) == null) {
             EdgeData srcToDestEdge = new EdgeDataImpl(src, dest, w);
+            rankIn.get(dest).add(src);
             Edges.get(src).put(dest, srcToDestEdge);
             ModeCounter++;
             EdgeCounter++;
@@ -228,15 +229,17 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
             return null;
 
         NodeData removedNode = Nodes.get(key);
-
         Nodes.remove(key);
         Edges.remove(key);
         EdgeCounter--;
         ModeCounter++;
-
+        ArrayList<Integer> currList = rankIn.get(key);
+        for(int dest : currList){
+            Edges.get(dest).remove(key);
+            EdgeCounter--;
+        }
 
         return removedNode;
-
 
     }
 
