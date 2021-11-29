@@ -7,6 +7,11 @@ public class GeoLocationImpl implements GeoLocation {
     private double y;
     private double z;
 
+    public GeoLocationImpl(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     public GeoLocationImpl(String g) {
         String[] geos = g.split(",");

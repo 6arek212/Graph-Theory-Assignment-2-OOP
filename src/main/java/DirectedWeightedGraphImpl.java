@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import json_models.DirectedWeightedGraphJson;
 import models.EdgeDataImpl;
 import models.NodeDataImpl;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Paths;
@@ -14,10 +15,19 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     private HashMap<Integer, NodeData> nodes;
     private HashMap<Integer, HashMap<Integer, EdgeData>> edges;
+    private HashMap<Integer, HashMap<Integer, EdgeData>> edgesIn;
 
     private int numOfEdges;
     private int modeCounter;
 
+
+    public DirectedWeightedGraphImpl() {
+        this.nodes = new HashMap<>();
+        this.edges = new HashMap<>();
+        this.edgesIn = new HashMap<>();
+        this.numOfEdges = 0;
+        this.modeCounter = 0;
+    }
 
     public static DirectedWeightedGraphImpl load(String filename) {
         try {
@@ -46,14 +56,17 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
             this.nodes.put(node.getKey(), node);
         }
 
+        this.edgesIn = new HashMap<>();
         this.edges = new HashMap<>();
         for (int i = 0; i < nodeSize(); i++) {
             this.edges.put(nodes.get(i).getKey(), new HashMap<>());
+            this.edgesIn.put(nodes.get(i).getKey(), new HashMap<>());
         }
 
         for (int i = 0; i < edgeSize(); i++) {
             EdgeDataImpl eg = new EdgeDataImpl(dgj.edges.get(i));
             this.edges.get(eg.getSrc()).put(eg.getDest(), eg);
+            this.edgesIn.get(eg.getDest()).put(eg.getSrc(), eg);
         }
     }
 
@@ -74,14 +87,18 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
         //copy edges
         this.edges = new HashMap<>();
+        this.edgesIn = new HashMap<>();
+
         for (int i = 0; i < nodeSize(); i++) {
             this.edges.put(nodes.get(i).getKey(), new HashMap<>());
+            this.edgesIn.put(nodes.get(i).getKey(), new HashMap<>());
         }
 
         Iterator<EdgeData> itEg = g.edgeIter();
         while (itEg.hasNext()) {
-            EdgeData ed = itEg.next();
+            EdgeData ed = new EdgeDataImpl(itEg.next());
             this.edges.get(ed.getSrc()).put(ed.getDest(), ed);
+            this.edgesIn.get(ed.getDest()).put(ed.getSrc(), ed);
         }
     }
 
@@ -93,8 +110,6 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public NodeData getNode(int key) {
-        if (nodes.isEmpty())
-            throw new RuntimeException("Node are empty");
         return nodes.get(key);
     }
 
@@ -109,13 +124,16 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     public void addNode(NodeData n) {
         this.nodes.put(n.getKey(), n);
         this.edges.put(n.getKey(), new HashMap<>());
+        this.edgesIn.put(n.getKey(), new HashMap<>());
         changeHappened();
     }
 
 
     @Override
     public void connect(int src, int dest, double w) {
-        this.edges.get(src).put(dest, new EdgeDataImpl(src, dest, w));
+        EdgeData ed = new EdgeDataImpl(src, dest, w);
+        this.edges.get(src).put(dest, ed);
+        this.edges.get(dest).put(src, ed);
         numOfEdges++;
         changeHappened();
     }
@@ -177,8 +195,6 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
 
-
-
     @Override
     public Iterator<EdgeData> edgeIter(int node_id) {
         if (!nodes.containsKey(node_id))
@@ -206,24 +222,30 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public NodeData removeNode(int key) {
-        numOfEdges -= this.edges.get(key).size();
-        this.edges.remove(key);
+        if (!this.nodes.containsKey(key))
+            return null;
+        numOfEdges -= (this.edges.get(key).size() + this.edgesIn.get(key).size());
+        Iterator<EdgeData> it = edgesIn.get(key).values().iterator();
 
-        for (HashMap<Integer, EdgeData> value : edges.values()) {
-            value.remove(key);
-            numOfEdges -= 1;
+        while (it.hasNext()) {
+            EdgeData ed = it.next();
+            it.remove();
+            removeEdge(ed.getSrc(), ed.getDest());
         }
+
         changeHappened();
+        this.edges.remove(key);
+        this.edgesIn.remove(key);
         return nodes.remove(key);
     }
 
 
     @Override
     public EdgeData removeEdge(int src, int dest) {
-        EdgeData ed = null;
-        if (this.edges.get(src) != null)
-            ed = this.edges.get(src).remove(dest);
-
+        if (!this.edges.containsKey(src) || !this.edgesIn.containsKey(dest))
+            return null;
+        EdgeData ed = this.edges.get(src).remove(dest);
+        this.edgesIn.get(dest).remove(src);
         numOfEdges--;
         changeHappened();
         return ed;
