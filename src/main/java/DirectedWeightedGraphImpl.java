@@ -29,7 +29,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         this.modeCounter = 0;
     }
 
-    public static DirectedWeightedGraphImpl load(String filename) {
+    public static DirectedWeightedGraph load(String filename) {
         try {
             DirectedWeightedGraphJson dgj = new Gson()
                     .fromJson(
@@ -122,6 +122,9 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public void addNode(NodeData n) {
+        if (this.nodes.containsKey(n.getKey()))
+            return;
+
         this.nodes.put(n.getKey(), n);
         this.edges.put(n.getKey(), new HashMap<>());
         this.edgesIn.put(n.getKey(), new HashMap<>());
@@ -215,6 +218,11 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
                 if (mc != modeCounter)
                     throw new RuntimeException("object has been changed");
                 return it.next();
+            }
+
+            @Override
+            public void remove() {
+                it.remove();
             }
         };
     }
