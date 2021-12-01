@@ -58,4 +58,10 @@ and a simple GUI
 
 ## References
 
+https://en.wikipedia.org/wiki/Graph_center
+
+https://en.wikipedia.org/wiki/Travelling_salesman_problem
+
 https://www.youtube.com/watch?v=XB4MIexjvY0&t=484s
+
+https://www.youtube.com/watch?v=XaXsJJh-Q5Y&t=600s
