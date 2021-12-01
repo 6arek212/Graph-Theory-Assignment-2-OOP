@@ -12,6 +12,7 @@ import assignment2.json_models.DirectedWeightedGraphJson;
 import assignment2.models.NodeDataImpl;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
 
 
@@ -24,7 +25,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
 
     public AlgorithmsImpl(String file) {
-        load(file);
+        load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/"+file);
     }
 
 

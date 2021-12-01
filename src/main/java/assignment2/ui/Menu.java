@@ -13,7 +13,7 @@ public class Menu {
         JMenuBar mb = new JMenuBar();
         JMenu menu1, menu2, menu3;
         JMenuItem load, save, shortestPath, shortestPathDist, isConnected, center,
-                fullGraph, tsp, deleteNode, addNode, deleteEdge, addEdge, newGraph;
+                tsp, deleteNode, addNode, deleteEdge, addEdge, newGraph;
 
         //menu 1
         menu1 = new JMenu("File");
@@ -30,14 +30,12 @@ public class Menu {
         shortestPathDist = new JMenuItem("Shortest Path Dist");
         isConnected = new JMenuItem("Is Strongly Connected ?");
         center = new JMenuItem("Center");
-        fullGraph = new JMenuItem("Show Full Graph");
         tsp = new JMenuItem("TSP");
 
         menu2.add(shortestPath);
         menu2.add(shortestPathDist);
         menu2.add(isConnected);
         menu2.add(center);
-        menu2.add(fullGraph);
 
 
         //graph actions
@@ -67,21 +65,17 @@ public class Menu {
 
 
         load.addActionListener((ActionEvent e) -> {
-            String res = JOptionPane.showInputDialog(null, "Enter json file name :", "G1") + ".json";
-            if (!view.getController().getAlgo().load(res)) {
-                JOptionPane.showMessageDialog(null, "Error file was not found");
-            } else {
-                view.getController().onTriggerEvent(new GraphEvents.LoadGraph(res));
-                view.calculateRange();
+            JFileChooser fileChooser = new JFileChooser();
+            int returnVal = fileChooser.showOpenDialog(fileChooser);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                String filepath = fileChooser.getSelectedFile().getAbsolutePath();
+                view.getController().onTriggerEvent(new GraphEvents.LoadGraph(filepath));
             }
-            view.updateUI();
         });
 
 
         newGraph.addActionListener((ActionEvent e) -> {
             view.getController().onTriggerEvent(new GraphEvents.NewGraph());
-            view.calculateRange();
-            view.updateUI();
         });
 
 
@@ -108,17 +102,14 @@ public class Menu {
             }
 
             view.getController().onTriggerEvent(new GraphEvents.ShortestPath(src, dest));
-            view.updateUI();
         });
 
         isConnected.addActionListener((ActionEvent event) -> {
             view.getController().onTriggerEvent(new GraphEvents.IsConnected());
-            view.updateUI();
         });
 
         center.addActionListener((ActionEvent event) -> {
             view.getController().onTriggerEvent(new GraphEvents.Center());
-            view.updateUI();
         });
 
         tsp.addActionListener((ActionEvent e) -> {
@@ -137,12 +128,6 @@ public class Menu {
             }
 
             view.getController().onTriggerEvent(new GraphEvents.TSP(cities));
-            view.updateUI();
-        });
-
-        fullGraph.addActionListener((ActionEvent e) -> {
-            view.getController().onTriggerEvent(new GraphEvents.FullGraph());
-            view.updateUI();
         });
 
 
@@ -158,8 +143,6 @@ public class Menu {
                 return;
             }
             view.getController().onTriggerEvent(new GraphEvents.RemoveNode(key));
-            view.calculateRange();
-            view.updateUI();
         });
 
 
@@ -178,8 +161,6 @@ public class Menu {
                 return;
             }
             view.getController().onTriggerEvent(new GraphEvents.AddNode(new GeoLocationImpl(x, y, 0), key));
-            view.calculateRange();
-            view.updateUI();
         });
 
 
@@ -196,7 +177,6 @@ public class Menu {
                 return;
             }
             view.getController().onTriggerEvent(new GraphEvents.DeleteEdge(src, dest));
-            view.updateUI();
         });
 
 
@@ -215,7 +195,6 @@ public class Menu {
                 return;
             }
             view.getController().onTriggerEvent(new GraphEvents.AddEdge(src, dest, w));
-            view.updateUI();
         });
 
 
