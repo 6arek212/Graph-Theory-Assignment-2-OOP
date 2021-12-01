@@ -7,6 +7,11 @@ import java.util.List;
 
 public class GraphEvents {
 
+
+
+    public static class RandomGraph extends GraphEvents {
+
+    }
     public static class NewGraph extends GraphEvents {
 
     }

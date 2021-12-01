@@ -1,6 +1,7 @@
 package assignment2.ui;
 
 
+import assignment2.DirectedGraphFactory;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
 import assignment2.api.NodeData;
@@ -40,7 +41,6 @@ public class GraphView extends JPanel {
     // init JFrame
     private void init(DirectedWeightedGraphAlgorithms alg) {
         this.j = new JFrame();
-
         j.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e){
                controller.clear();
