@@ -1,13 +1,10 @@
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
-import models.GeoLocationImpl;
-import models.NodeDataImpl;
-import ui.DisplayView;
-
-
+import ui.*;
+import ui.Menu;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
+
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -38,38 +35,30 @@ public class Ex2 {
 
     /**
      * This static function will run your GUI using the json fime.
+     * <p>
+     * MVI architecture is used for structuring the ui (MODEL VIEW INTENT)
      *
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      */
     public static void runGUI(String json_file) {
-        DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
         JFrame j = new JFrame();
+        ActionListener actionListener = (UIEvents event) -> {
+            if (event instanceof UIEvents.ShowMessage)
+                JOptionPane.showMessageDialog(null, ((UIEvents.ShowMessage) event).getMessage());
+        };
+        DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
+        GraphView v = new GraphView(new GraphViewModel(alg, actionListener), j.getHeight(), j.getWidth());
+        Menu.initMenu(j, v, actionListener);
         j.setBackground(Color.WHITE);
         j.setSize(800, 600);
         j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         j.setVisible(true);
-
-
-        //remove edge
-        alg.getGraph().removeEdge(0,1);
-        alg.getGraph().removeEdge(0,21);
-        alg.getGraph().removeEdge(0,16);
-        alg.getGraph().removeEdge(1,0);
-        alg.getGraph().removeEdge(21,0);
-        alg.getGraph().removeEdge(16,0);
-
-
-        //connect
-        //alg.getGraph().connect(16,0,50);
-        DisplayView v = new DisplayView(alg, j.getHeight(), j.getWidth());
-        v.fullGraph();
         j.add(v);
-
     }
+
 
 
     public static void main(String[] args) {
         runGUI("G3.json");
-
     }
 }
