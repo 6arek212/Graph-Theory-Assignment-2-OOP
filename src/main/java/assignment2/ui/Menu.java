@@ -60,7 +60,8 @@ public class Menu {
         //menu 1
         save.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter file name :", "");
-            view.getController().onTriggerEvent(new GraphEvents.SaveGraph(res + ".txt"));
+            if (res != null&& !res.trim().isEmpty())
+                view.getController().onTriggerEvent(new GraphEvents.SaveGraph(res + ".txt"));
         });
 
 

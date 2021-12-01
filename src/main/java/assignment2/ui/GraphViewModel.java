@@ -30,7 +30,6 @@ public class GraphViewModel {
         this.actionListener = actionListener;
         this.algo = graphAlg;
         pool = Executors.newFixedThreadPool(N_THREADS);
-
         initNodeEdges();
         setTextUi();
     }
@@ -39,7 +38,7 @@ public class GraphViewModel {
     /**
      * Fires the View events on a background thread
      * <p>
-     * Only one task will be executed
+     * Only one task will be executed at a time
      *
      * @param event
      */
@@ -101,7 +100,6 @@ public class GraphViewModel {
 
                     setTextUi();
                     actionListener.actionEvent(new UIEvents.UpdateUi());
-
                 }
         );
     }
