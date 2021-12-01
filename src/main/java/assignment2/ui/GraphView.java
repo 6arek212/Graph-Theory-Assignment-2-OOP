@@ -1,7 +1,6 @@
 package assignment2.ui;
 
 
-import assignment2.DirectedGraphFactory;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
 import assignment2.api.NodeData;

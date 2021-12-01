@@ -1,6 +1,6 @@
 package assignment2.ui;
 
-import assignment2.DirectedGraphFactory;
+import assignment2.utils.DirectedGraphFactory;
 import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
@@ -11,7 +11,6 @@ import assignment2.models.NodeDataImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
