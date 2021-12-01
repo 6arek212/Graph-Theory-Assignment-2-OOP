@@ -163,6 +163,11 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
                     throw new RuntimeException("object has been changed");
                 return it.next();
             }
+
+            @Override
+            public void remove() {
+                it.remove();
+            }
         };
     }
 
@@ -195,6 +200,13 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
                 if (mc != modeCounter)
                     throw new RuntimeException("object has been changed");
                 return ed.get(i++);
+            }
+
+
+            @Override
+            public void remove() {
+                EdgeData eg = ed.remove(i);
+                removeEdge(eg.getSrc(), eg.getDest());
             }
         };
     }

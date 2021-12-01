@@ -26,6 +26,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     public AlgorithmsImpl(String file) {
         load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/"+file);
+
     }
 
 

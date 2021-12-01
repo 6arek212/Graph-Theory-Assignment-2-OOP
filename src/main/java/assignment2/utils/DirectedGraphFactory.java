@@ -31,8 +31,10 @@ public class DirectedGraphFactory {
     }
 
     public static DirectedWeightedGraph instantiate(int numberOfNodes, int numberOfEdges, long seed) {
-        if (numberOfEdges > numberOfNodes * (numberOfNodes - 1) / 2)
-            throw new RuntimeException("number of edges is not possible ");
+       // System.out.println(numberOfEdges +"   " + (numberOfNodes * (numberOfNodes - 1)) / 2);
+//        if (numberOfEdges > numberOfNodes * (numberOfNodes - 1) / 2)
+//            throw new RuntimeException("number of edges is not possible ");
+
         System.out.println("Seed number " + seed);
         DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
         Random r = new Random(seed);
