@@ -20,8 +20,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
-        AlgorithmsImpl ag = new AlgorithmsImpl(json_file);
-        return ag.getGraph();
+        return new AlgorithmsImpl(json_file).getGraph();
     }
 
 
@@ -32,8 +31,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
-        AlgorithmsImpl ag = new AlgorithmsImpl(json_file);
-        return ag;
+        return new AlgorithmsImpl(json_file);
     }
 
     /**

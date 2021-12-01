@@ -1,5 +1,6 @@
 package assignment2.ui;
 
+import assignment2.DirectedGraphFactory;
 import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
@@ -10,6 +11,7 @@ import assignment2.models.NodeDataImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,6 +21,7 @@ import java.util.concurrent.Executors;
  */
 public class GraphViewModel {
     private final static int N_THREADS = 1;
+    private final static int SEED = 1;
 
     private DirectedWeightedGraphAlgorithms algo;
     private List<NodeData> nodes;
@@ -98,10 +101,19 @@ public class GraphViewModel {
                         newGraph();
                     }
 
+                    if (event instanceof GraphEvents.RandomGraph) {
+                        randomGraph();
+                    }
+
                     setTextUi();
                     actionListener.actionEvent(new UIEvents.UpdateUi());
                 }
         );
+    }
+
+    private void randomGraph() {
+        algo.init(DirectedGraphFactory.instantiate((int) (Math.random() * 100 + 1)));
+        initNodeEdges();
     }
 
     private void setTextUi() {
@@ -208,7 +220,6 @@ public class GraphViewModel {
 
     private void shortestPath(int src, int dest) {
         List<NodeData> path = algo.shortestPath(src, dest);
-
         if (path == null) {
             actionListener.actionEvent(new UIEvents.ShowMessage("There is no path from " + src + " to " + dest));
             return;

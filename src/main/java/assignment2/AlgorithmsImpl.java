@@ -151,7 +151,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     public List<NodeData> shortestPath(int src, int dest) {
         if (graph.nodeSize() == 0 || graph.getNode(dest) == null || graph.getNode(src) == null)
             return null;
-        //TODO : DIST MUST HANDLE DIFFRENT KEYS NOT SEQUNSE
 
         DirectedWeightedGraph graph = new DirectedWeightedGraphImpl(this.graph);
         Iterator<NodeData> iterator = graph.nodeIter();
@@ -191,6 +190,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                 }
             }
             node.setTag(NodeDataImpl.BLACK);
+
         }
 
 

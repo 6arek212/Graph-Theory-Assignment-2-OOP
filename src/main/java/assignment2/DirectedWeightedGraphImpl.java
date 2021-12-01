@@ -36,7 +36,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
             //Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" +
             DirectedWeightedGraphJson dgj = new Gson()
                     .fromJson(
-                            new FileReader( filename),
+                            new FileReader(filename),
                             DirectedWeightedGraphJson.class
                     );
             return new DirectedWeightedGraphImpl(dgj);
@@ -134,6 +134,8 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public void connect(int src, int dest, double w) {
+        if (src == dest || !this.nodes.containsKey(src) || !this.nodes.containsKey(dest))
+            return;
         EdgeData ed = new EdgeDataImpl(src, dest, w);
         this.edges.get(src).put(dest, ed);
         this.edges.get(dest).put(src, ed);

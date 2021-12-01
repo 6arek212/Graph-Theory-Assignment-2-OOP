@@ -13,16 +13,19 @@ public class Menu {
         JMenuBar mb = new JMenuBar();
         JMenu menu1, menu2, menu3;
         JMenuItem open, save, shortestPath, shortestPathDist, isConnected, center,
-                tsp, deleteNode, addNode, deleteEdge, addEdge, newGraph;
+                tsp, deleteNode, addNode, deleteEdge, addEdge, newGraph, randomGraph;
 
         //menu 1
         menu1 = new JMenu("File");
         open = new JMenuItem("Open File");
         save = new JMenuItem("Save");
         newGraph = new JMenuItem("New Graph");
+        randomGraph = new JMenuItem("Random Graph");
+
         menu1.add(newGraph);
         menu1.add(open);
         menu1.add(save);
+        menu1.add(randomGraph);
 
         //menu 2
         menu2 = new JMenu("Algorithms");
@@ -60,7 +63,7 @@ public class Menu {
         //menu 1
         save.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter file name :", "");
-            if (res != null&& !res.trim().isEmpty())
+            if (res != null && !res.trim().isEmpty())
                 view.getController().onTriggerEvent(new GraphEvents.SaveGraph(res + ".txt"));
         });
 
@@ -79,6 +82,9 @@ public class Menu {
             view.getController().onTriggerEvent(new GraphEvents.NewGraph());
         });
 
+        randomGraph.addActionListener((ActionEvent e) -> {
+            view.getController().onTriggerEvent(new GraphEvents.RandomGraph());
+        });
 
         //menu 2
         shortestPathDist.addActionListener((ActionEvent event) -> {
