@@ -33,9 +33,10 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     public static DirectedWeightedGraph load(String filename) {
         try {
+            //Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" +
             DirectedWeightedGraphJson dgj = new Gson()
                     .fromJson(
-                            new FileReader(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" + filename),
+                            new FileReader( filename),
                             DirectedWeightedGraphJson.class
                     );
             return new DirectedWeightedGraphImpl(dgj);

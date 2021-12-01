@@ -10,82 +10,100 @@ import assignment2.models.NodeDataImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
  * Controller class that handles the view data
  */
 public class GraphViewModel {
+    private final static int N_THREADS = 1;
+
     private DirectedWeightedGraphAlgorithms algo;
     private List<NodeData> nodes;
     private List<EdgeData> edges;
     private ActionListener actionListener;
+    private ExecutorService pool;
 
     public GraphViewModel(DirectedWeightedGraphAlgorithms graphAlg, ActionListener actionListener) {
         this.actionListener = actionListener;
         this.algo = graphAlg;
+        pool = Executors.newFixedThreadPool(N_THREADS);
+
         initNodeEdges();
         setTextUi();
     }
 
 
+    /**
+     * Fires the View events on a background thread
+     * <p>
+     * Only one task will be executed
+     *
+     * @param event
+     */
     public void onTriggerEvent(GraphEvents event) {
-        initTags();
-        actionListener.actionEvent(new UIEvents.UpdateUi());
+        pool.execute(
+                () -> {
+                    initTags();
+                    actionListener.actionEvent(new UIEvents.UpdateUi());
+                    if (event instanceof GraphEvents.LoadGraph) {
+                        if (algo.load(((GraphEvents.LoadGraph) event).filename))
+                            initNodeEdges();
+                        else
+                            actionListener.actionEvent(new UIEvents.ShowMessage("Error file was not found"));
+                    }
 
-        if (event instanceof GraphEvents.LoadGraph) {
-            algo.load(((GraphEvents.LoadGraph) event).filename);
-            initNodeEdges();
-        }
+                    if (event instanceof GraphEvents.SaveGraph) {
+                        algo.save(((GraphEvents.SaveGraph) event).filename);
+                    }
 
-        if (event instanceof GraphEvents.SaveGraph) {
-            algo.save(((GraphEvents.SaveGraph) event).filename);
-        }
+                    if (event instanceof GraphEvents.ShortestPath) {
+                        shortestPath(((GraphEvents.ShortestPath) event).src, ((GraphEvents.ShortestPath) event).dest);
+                    }
 
-        if (event instanceof GraphEvents.ShortestPath) {
-            shortestPath(((GraphEvents.ShortestPath) event).src, ((GraphEvents.ShortestPath) event).dest);
-        }
+                    if (event instanceof GraphEvents.ShortestPathDist) {
+                        shortestPathDist(((GraphEvents.ShortestPathDist) event).src, ((GraphEvents.ShortestPathDist) event).dest);
+                    }
 
-        if (event instanceof GraphEvents.ShortestPathDist) {
-            shortestPathDist(((GraphEvents.ShortestPathDist) event).src, ((GraphEvents.ShortestPathDist) event).dest);
-        }
+                    if (event instanceof GraphEvents.IsConnected) {
+                        isConnected();
+                    }
 
-        if (event instanceof GraphEvents.IsConnected) {
-            isConnected();
-        }
+                    if (event instanceof GraphEvents.Center) {
+                        center();
+                    }
 
-        if (event instanceof GraphEvents.Center) {
-            center();
-        }
+                    if (event instanceof GraphEvents.TSP) {
+                        tsp(((GraphEvents.TSP) event).getCities());
+                    }
 
-        if (event instanceof GraphEvents.FullGraph) {
-            initNodeEdges();
-        }
+                    if (event instanceof GraphEvents.RemoveNode) {
+                        removeNode(((GraphEvents.RemoveNode) event).getKey());
+                    }
 
-        if (event instanceof GraphEvents.TSP) {
-            tsp(((GraphEvents.TSP) event).getCities());
-        }
+                    if (event instanceof GraphEvents.AddNode) {
+                        addNode(((GraphEvents.AddNode) event).getKey(), ((GraphEvents.AddNode) event).getLocation());
+                    }
 
-        if (event instanceof GraphEvents.RemoveNode) {
-            removeNode(((GraphEvents.RemoveNode) event).getKey());
-        }
+                    if (event instanceof GraphEvents.DeleteEdge) {
+                        deleteEdge(((GraphEvents.DeleteEdge) event).getSrc(), ((GraphEvents.DeleteEdge) event).getDest());
+                    }
 
-        if (event instanceof GraphEvents.AddNode) {
-            addNode(((GraphEvents.AddNode) event).getKey(), ((GraphEvents.AddNode) event).getLocation());
-        }
+                    if (event instanceof GraphEvents.AddEdge) {
+                        addEdge(((GraphEvents.AddEdge) event).getSrc(), ((GraphEvents.AddEdge) event).getDest(), ((GraphEvents.AddEdge) event).getW());
+                    }
 
-        if (event instanceof GraphEvents.DeleteEdge) {
-            deleteEdge(((GraphEvents.DeleteEdge) event).getSrc(), ((GraphEvents.DeleteEdge) event).getDest());
-        }
+                    if (event instanceof GraphEvents.NewGraph) {
+                        newGraph();
+                    }
 
-        if (event instanceof GraphEvents.AddEdge) {
-            addEdge(((GraphEvents.AddEdge) event).getSrc(), ((GraphEvents.AddEdge) event).getDest(), ((GraphEvents.AddEdge) event).getW());
-        }
+                    setTextUi();
+                    actionListener.actionEvent(new UIEvents.UpdateUi());
 
-        if (event instanceof GraphEvents.NewGraph) {
-            newGraph();
-        }
-
-        setTextUi();
+                }
+        );
     }
 
     private void setTextUi() {
@@ -151,30 +169,27 @@ public class GraphViewModel {
     }
 
     private void center() {
-        new Thread(() -> {
-            NodeData centerNode = algo.center();
-            if (centerNode != null) {
-                centerNode.setTag(NodeDataImpl.BLACK);
-                actionListener.actionEvent(new UIEvents.UpdateUi());
-                return;
-            }
-            actionListener.actionEvent(new UIEvents.ShowMessage("The graph is not strongly connected !"));
-        }).start();
+        NodeData centerNode = algo.center();
+        if (centerNode != null) {
+            centerNode.setTag(NodeDataImpl.BLACK);
+            actionListener.actionEvent(new UIEvents.UpdateUi());
+            return;
+        }
+        actionListener.actionEvent(new UIEvents.ShowMessage("The graph is not strongly connected !"));
+
 
     }
 
 
     private void isConnected() {
-        new Thread(() -> {
-            String msg;
+        String msg;
 
-            if (algo.isConnected())
-                msg = "The graph is connected";
-            else
-                msg = "The graph is not connected";
+        if (algo.isConnected())
+            msg = "The graph is connected";
+        else
+            msg = "The graph is not connected";
 
-            actionListener.actionEvent(new UIEvents.ShowMessage(msg));
-        }).start();
+        actionListener.actionEvent(new UIEvents.ShowMessage(msg));
     }
 
 
@@ -201,18 +216,16 @@ public class GraphViewModel {
             return;
         }
 
-        new Thread(() -> {
-            for (NodeData n : path) {
-                n.setTag(NodeDataImpl.BLACK);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                actionListener.actionEvent(new UIEvents.UpdateUi());
+        for (NodeData n : path) {
+            n.setTag(NodeDataImpl.BLACK);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            shortestPathDist(src, dest);
-        }).start();
+            actionListener.actionEvent(new UIEvents.UpdateUi());
+        }
+        shortestPathDist(src, dest);
     }
 
     private void initTags() {
@@ -227,6 +240,9 @@ public class GraphViewModel {
         actionListener.actionEvent(new UIEvents.ShowMessage("The shortest path between " + src + " and " + dest + " : " + dist));
     }
 
+    public void clear() {
+        pool.shutdown();
+    }
 
     public List<NodeData> getNodes() {
         return this.nodes;

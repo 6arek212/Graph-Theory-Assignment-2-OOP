@@ -97,8 +97,6 @@ public class GraphEvents {
         }
     }
 
-    public static class FullGraph extends GraphEvents {
-    }
 
     public static class Center extends GraphEvents {
     }

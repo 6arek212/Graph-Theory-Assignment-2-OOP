@@ -9,6 +9,8 @@ import assignment2.ui.utils.Range;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Iterator;
 
 
@@ -37,6 +39,13 @@ public class GraphView extends JPanel {
 
     private void init(DirectedWeightedGraphAlgorithms alg) {
         this.j = new JFrame();
+
+        j.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+               controller.clear();
+            }
+        });
+
         numberOfNodes = new JLabel();
         numberOfEdges = new JLabel();
         graphText = new JLabel();
@@ -52,8 +61,10 @@ public class GraphView extends JPanel {
                 numberOfEdges.setText("Edges : " + ((UIEvents.Labels) event).getNumberOfEdges() + "");
                 numberOfNodes.setText("Nodes : " + ((UIEvents.Labels) event).getNumberOfNode() + "");
             }
-            if (event instanceof UIEvents.UpdateUi)
+            if (event instanceof UIEvents.UpdateUi) {
+                calculateRange();
                 updateUI();
+            }
         };
         this.controller = new GraphViewModel(alg, actionListener);
         Menu.initMenu(j, this, actionListener);
