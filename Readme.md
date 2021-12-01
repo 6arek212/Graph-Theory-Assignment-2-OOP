@@ -1,4 +1,9 @@
-# Graph Theory Assignment
+# Graph Theory
+![Builds](https://github.com/project-chip/connectedhomeip/workflows/Builds/badge.svg)
+#### A part of university assignment
+
+
+</br>
 
 
 ## Project Overview
