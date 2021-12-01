@@ -4,6 +4,7 @@ package assignment2.ui;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
 import assignment2.api.NodeData;
+import assignment2.models.NodeDataImpl;
 import assignment2.ui.utils.Range;
 
 import javax.swing.*;
@@ -15,10 +16,11 @@ import java.util.Iterator;
  * Simple UI for presenting the graph
  */
 public class GraphView extends JPanel {
-
-    private GraphViewModel controller;
     private final int radios = 20;
     private final int padding = 70;
+
+
+    private GraphViewModel controller;
     private Range r1x;
     private Range r1y;
     private Range r2x;
@@ -27,7 +29,6 @@ public class GraphView extends JPanel {
     private JLabel numberOfNodes;
     private JLabel numberOfEdges;
     private JLabel graphText;
-
 
 
     public GraphView(DirectedWeightedGraphAlgorithms g) {
@@ -48,9 +49,11 @@ public class GraphView extends JPanel {
             if (event instanceof UIEvents.ShowMessage)
                 JOptionPane.showMessageDialog(null, ((UIEvents.ShowMessage) event).getMessage());
             if (event instanceof UIEvents.Labels) {
-                numberOfEdges.setText("Edges :" + ((UIEvents.Labels) event).getNumberOfEdges() + "");
-                numberOfNodes.setText("Nodes :" + ((UIEvents.Labels) event).getNumberOfNode() + "");
+                numberOfEdges.setText("Edges : " + ((UIEvents.Labels) event).getNumberOfEdges() + "");
+                numberOfNodes.setText("Nodes : " + ((UIEvents.Labels) event).getNumberOfNode() + "");
             }
+            if (event instanceof UIEvents.UpdateUi)
+                updateUI();
         };
         this.controller = new GraphViewModel(alg, actionListener);
         Menu.initMenu(j, this, actionListener);
@@ -97,7 +100,7 @@ public class GraphView extends JPanel {
         super.paint(g);
         numberOfNodes.setBounds(16, 16, padding + 16, 10);
         numberOfEdges.setBounds(16, 32, padding + 16, 10);
-        graphText.setBounds(getWidth()/2,16,100,40);
+        graphText.setBounds(getWidth() / 2, 16, 100, 40);
         r2x.setMax(getWidth() - padding);
         r2y.setMax(getHeight() - padding);
         printGraph(g);
@@ -120,8 +123,18 @@ public class GraphView extends JPanel {
         g.setColor(Color.BLACK);
         for (int i = 0; i < controller.getNodes().size(); i++) {
             NodeData node = controller.getNodes().get(i);
-            if (node != null)
+            if (node != null) {
+                if (node.getTag() == NodeDataImpl.WHITE) {
+                    g.setColor(Color.BLACK);
+                } else if (node.getTag() == NodeDataImpl.GRAY) {
+                    g.setColor(Color.GRAY);
+                } else {
+                    g.setColor(Color.RED);
+                }
+
                 g.fillOval((int) r1x.toRange(r2x, node.getLocation().x()) - radios / 2, (int) r1y.toRange(r2y, node.getLocation().y()) - radios / 2, radios, radios);
+            }
+
         }
     }
 

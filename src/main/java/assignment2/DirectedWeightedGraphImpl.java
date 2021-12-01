@@ -78,24 +78,21 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         this.numOfEdges = g.edgeSize();
         this.modeCounter = g.getMC();
         this.nodes = new HashMap<>();
+        this.edges = new HashMap<>();
+        this.edgesIn = new HashMap<>();
 
         //copy nodes
         Iterator<NodeData> it = g.nodeIter();
         while (it.hasNext()) {
             NodeData d = new NodeDataImpl(it.next());
             this.nodes.put(d.getKey(), d);
+
+            this.edges.put(d.getKey(), new HashMap<>());
+            this.edgesIn.put(d.getKey(), new HashMap<>());
         }
 
 
         //copy edges
-        this.edges = new HashMap<>();
-        this.edgesIn = new HashMap<>();
-
-        for (int i = 0; i < nodeSize(); i++) {
-            this.edges.put(nodes.get(i).getKey(), new HashMap<>());
-            this.edgesIn.put(nodes.get(i).getKey(), new HashMap<>());
-        }
-
         Iterator<EdgeData> itEg = g.edgeIter();
         while (itEg.hasNext()) {
             EdgeData ed = new EdgeDataImpl(itEg.next());

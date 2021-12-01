@@ -47,7 +47,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      * get the transpose of the graph
      * complexity  O(V+E)
      */
-    private DirectedWeightedGraph reverse() {
+    private DirectedWeightedGraph reverse(DirectedWeightedGraph graph) {
         DirectedWeightedGraph reverseGraph = new DirectedWeightedGraphImpl();
         Iterator<EdgeData> it = graph.edgeIter();
         while (it.hasNext()) {
@@ -110,12 +110,13 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public boolean isConnected() {
+        DirectedWeightedGraph graph = new DirectedWeightedGraphImpl(this.graph);
         Iterator<NodeData> iterator = graph.nodeIter();
         List<NodeData> nodes = new ArrayList<>();
         while (iterator.hasNext()) {
             nodes.add(iterator.next());
         }
-        return dfs(reverse(), dfs(graph, nodes, false), true).size() == graph.nodeSize();
+        return dfs(reverse(graph), dfs(graph, nodes, false), true).size() == graph.nodeSize();
     }
 
 
@@ -134,7 +135,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         List<NodeData> path = shortestPath(src, dest);
         if (path == null)
             return -1;
-        return path.get(path.size() - 1).getWeight();
+        return pathCost(path);
     }
 
 
@@ -147,8 +148,11 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        if (graph.nodeSize() == 0)
+        if (graph.nodeSize() == 0 || graph.getNode(dest) == null || graph.getNode(src) == null)
             return null;
+        //TODO : DIST MUST HANDLE DIFFRENT KEYS NOT SEQUNSE
+
+        DirectedWeightedGraph graph = new DirectedWeightedGraphImpl(this.graph);
         Iterator<NodeData> iterator = graph.nodeIter();
 
         while (iterator.hasNext()) {
@@ -161,8 +165,8 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             }
         }
 
-        NodeData[] dist = new NodeData[graph.nodeSize()];
-        dist[src] = graph.getNode(src);
+        HashMap<Integer, NodeData> dist = new HashMap<>();
+        dist.put(src, graph.getNode(src));
 
         PriorityQueue<NodeData> nodeQ = new PriorityQueue<>((NodeData o1, NodeData o2) -> {
             if (o1.getWeight() < o2.getWeight())
@@ -175,13 +179,12 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
         while (!nodeQ.isEmpty()) {
             NodeData node = nodeQ.poll();
-
             for (EdgeData edge : getAdj(graph, node.getKey())) {
                 NodeData connectedto = graph.getNode(edge.getDest());
                 if (connectedto.getTag() == NodeDataImpl.WHITE) {
                     if (node.getWeight() + edge.getWeight() < connectedto.getWeight()) {
                         connectedto.setWeight(node.getWeight() + edge.getWeight());
-                        dist[connectedto.getKey()] = node;
+                        dist.put(connectedto.getKey(), node);
                     }
                     nodeQ.add(connectedto);
                 }
@@ -196,10 +199,10 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         List<NodeData> path = new ArrayList<>();
         NodeData node = graph.getNode(dest);
         while (node.getKey() != src) {
-            path.add(0, dist[node.getKey()]);
-            node = dist[node.getKey()];
+            path.add(0, this.graph.getNode(dist.get(node.getKey()).getKey()));
+            node = dist.get(node.getKey());
         }
-        path.add(graph.getNode(dest));
+        path.add(this.graph.getNode(dest));
 
         return path;
     }
@@ -208,7 +211,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     public NodeData center() {
         if (!isConnected() || graph.nodeSize() == 0)
             return null;
-
         Iterator<NodeData> t = graph.nodeIter();
         double currentMin = Integer.MAX_VALUE;
         int node = 0;

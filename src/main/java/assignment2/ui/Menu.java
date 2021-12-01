@@ -95,8 +95,19 @@ public class Menu {
 
         shortestPath.addActionListener((ActionEvent event) -> {
             String res = JOptionPane.showInputDialog(null, "Enter 2 nodes ids : ", "0,4");
-            view.getController().onTriggerEvent(new GraphEvents.ShortestPath(Integer.parseInt(res.charAt(0) + ""),
-                    Integer.parseInt(res.charAt(2) + "")));
+            String[] data = res.split(",");
+            int src, dest;
+
+            try {
+                src = Integer.parseInt(data[0].trim());
+                dest = Integer.parseInt(data[1].trim());
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+                actionListener.actionEvent(new UIEvents.ShowMessage("Enter numbers only separated by ,"));
+                return;
+            }
+
+            view.getController().onTriggerEvent(new GraphEvents.ShortestPath(src, dest));
             view.updateUI();
         });
 

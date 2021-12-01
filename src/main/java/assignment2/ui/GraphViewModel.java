@@ -29,6 +29,9 @@ public class GraphViewModel {
 
 
     public void onTriggerEvent(GraphEvents event) {
+        initTags();
+        actionListener.actionEvent(new UIEvents.UpdateUi());
+
         if (event instanceof GraphEvents.LoadGraph) {
             algo.load(((GraphEvents.LoadGraph) event).filename);
             initNodeEdges();
@@ -85,8 +88,8 @@ public class GraphViewModel {
         setTextUi();
     }
 
-    private void setTextUi(){
-        actionListener.actionEvent(new UIEvents.Labels(nodes.size(),edges.size()));
+    private void setTextUi() {
+        actionListener.actionEvent(new UIEvents.Labels(nodes.size(), edges.size()));
     }
 
     private void newGraph() {
@@ -148,25 +151,30 @@ public class GraphViewModel {
     }
 
     private void center() {
-        NodeData centerNode = algo.center();
-        if (centerNode != null) {
-            this.nodes = new ArrayList<>();
-            this.edges = new ArrayList<>();
-            nodes.add(centerNode);
-            return;
-        }
-        actionListener.actionEvent(new UIEvents.ShowMessage("The graph is not strongly connected !"));
+        new Thread(() -> {
+            NodeData centerNode = algo.center();
+            if (centerNode != null) {
+                centerNode.setTag(NodeDataImpl.BLACK);
+                actionListener.actionEvent(new UIEvents.UpdateUi());
+                return;
+            }
+            actionListener.actionEvent(new UIEvents.ShowMessage("The graph is not strongly connected !"));
+        }).start();
+
     }
 
 
     private void isConnected() {
-        String msg;
-        if (algo.isConnected())
-            msg = "The graph is connected";
-        else
-            msg = "The graph is not connected";
+        new Thread(() -> {
+            String msg;
 
-        actionListener.actionEvent(new UIEvents.ShowMessage(msg));
+            if (algo.isConnected())
+                msg = "The graph is connected";
+            else
+                msg = "The graph is not connected";
+
+            actionListener.actionEvent(new UIEvents.ShowMessage(msg));
+        }).start();
     }
 
 
@@ -187,14 +195,30 @@ public class GraphViewModel {
 
     private void shortestPath(int src, int dest) {
         List<NodeData> path = algo.shortestPath(src, dest);
+
         if (path == null) {
             actionListener.actionEvent(new UIEvents.ShowMessage("There is no path from " + src + " to " + dest));
             return;
         }
-        this.nodes = path;
-        this.edges = new ArrayList<>();
-        for (int i = 0; i < this.nodes.size() - 1; i++) {
-            this.edges.add(algo.getGraph().getEdge(this.nodes.get(i).getKey(), this.nodes.get(i + 1).getKey()));
+
+        new Thread(() -> {
+            for (NodeData n : path) {
+                n.setTag(NodeDataImpl.BLACK);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                actionListener.actionEvent(new UIEvents.UpdateUi());
+            }
+            shortestPathDist(src, dest);
+        }).start();
+    }
+
+    private void initTags() {
+        Iterator<NodeData> it = algo.getGraph().nodeIter();
+        while (it.hasNext()) {
+            it.next().setTag(NodeDataImpl.WHITE);
         }
     }
 
