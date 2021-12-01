@@ -45,7 +45,7 @@ and a simple GUI
 - `Dijkstra Algorithm` for the shortest path between two nodes O(|V|*|V|)  
 - `Strongly connected components` to check weither the graph
 is connected there must be only **One** strongly connected component O(|V|+|E|)
-- center algorithm using the shortest path O(|V| * |V| * |V|)
+- `center` algorithm using the shortest path O(|V| * |V| * |V|)
 
 
 
