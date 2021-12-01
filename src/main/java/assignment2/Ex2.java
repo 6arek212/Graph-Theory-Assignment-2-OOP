@@ -3,10 +3,7 @@ package assignment2;
 import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.ui.*;
-import assignment2.ui.Menu;
 
-import javax.swing.*;
-import java.awt.*;
 
 
 /**
