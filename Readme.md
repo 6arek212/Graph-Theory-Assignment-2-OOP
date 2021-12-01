@@ -14,7 +14,7 @@ and a simple GUI
 
 ## What is needed to be done
 
-- Graph Implementation
+- ### Graph 
 
     - Add node
     - Delete node
@@ -24,18 +24,30 @@ and a simple GUI
     - iterate through all the edges 
 
   
-- Algorithms Implementation
+- ### Algorithms 
 
-    - Shortest path between two nodes **" Dijkstra Algorithm "**
+    - Shortest path between two nodes 
     - The center node
     - Travelling salesman problem
     - Strongly connected
 
 
-- Json functions
+- ### Json 
    
     - Load json graph
     - Save graph as json
+
+</br>
+
+
+## Algorithms Implementation 
+
+- `Dijkstra Algorithm` for the shortest path between two nodes O(|V|*|V|)  
+- `Strongly connected components` to check weither the graph
+is connected there must be only **One** strongly connected component O(|V|+|E|)
+- center algorithm using the shortest path O(|V| * |V| * |V|)
+
+
 
 </br>
 
