@@ -37,6 +37,7 @@ public class GraphView extends JPanel {
         init(g);
     }
 
+    // init JFrame
     private void init(DirectedWeightedGraphAlgorithms alg) {
         this.j = new JFrame();
 
