@@ -12,16 +12,16 @@ public class Menu {
     public static void initMenu(JFrame j, GraphView view, ActionListener actionListener) {
         JMenuBar mb = new JMenuBar();
         JMenu menu1, menu2, menu3;
-        JMenuItem load, save, shortestPath, shortestPathDist, isConnected, center,
+        JMenuItem open, save, shortestPath, shortestPathDist, isConnected, center,
                 tsp, deleteNode, addNode, deleteEdge, addEdge, newGraph;
 
         //menu 1
         menu1 = new JMenu("File");
-        load = new JMenuItem("Load");
+        open = new JMenuItem("Open File");
         save = new JMenuItem("Save");
         newGraph = new JMenuItem("New Graph");
         menu1.add(newGraph);
-        menu1.add(load);
+        menu1.add(open);
         menu1.add(save);
 
         //menu 2
@@ -64,7 +64,7 @@ public class Menu {
         });
 
 
-        load.addActionListener((ActionEvent e) -> {
+        open.addActionListener((ActionEvent e) -> {
             JFileChooser fileChooser = new JFileChooser();
             int returnVal = fileChooser.showOpenDialog(fileChooser);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
