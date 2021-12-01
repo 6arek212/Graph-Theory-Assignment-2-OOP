@@ -5,6 +5,7 @@
 Implementing weighted graph data structure alongside known graph algorithms 
 and a simple GUI
 
+</br>
 
 ## What is needed to be done
 
@@ -31,20 +32,24 @@ and a simple GUI
     - Load json graph
     - Save graph as json
 
+</br>
 
 
 # Example 
     Running the shortest path algorithm "Dijkstra Algorithm"  
+</br>
 
   ![](shortest-path.gif)
 
 
+</br>
 
 ## Authors
 
 * **Tarik Husin**  - linkedin -> https://www.linkedin.com/in/tarik-husin-706754184/
 * **Wisam Kabha**  - github -> https://github.com/Wissam111
 
+</br>
 
 ## References
 
