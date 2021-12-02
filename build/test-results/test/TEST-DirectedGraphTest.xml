@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="DirectedGraphTest" tests="1" skipped="1" failures="0" errors="0" timestamp="2021-12-02T15:47:28" hostname="DESKTOP-FFIPGV5" time="1.864">
+  <properties/>
+  <testcase name="bigRandomGraph()" classname="DirectedGraphTest" time="1.864">
+    <skipped/>
+  </testcase>
+  <system-out><![CDATA[Seed number 1
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

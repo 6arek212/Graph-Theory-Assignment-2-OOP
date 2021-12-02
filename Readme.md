@@ -31,8 +31,11 @@ and a simple GUI
 - `Remove Edge` : drag and drop form two different nodes or `Graph -> Remove Edge`
 - To excute an algorithm go to `Algorithms -> `
 
+</br>
+</br>
 
 ### Example
+</br>
 
 ![](howtouse.gif)
 
