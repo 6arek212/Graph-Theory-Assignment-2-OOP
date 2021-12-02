@@ -1,5 +1,6 @@
 package implementation;
 
+
 import api.GeoLocation;
 
 public class GeoLocationImpl implements GeoLocation {
@@ -13,6 +14,11 @@ public class GeoLocationImpl implements GeoLocation {
         this.x = Double.parseDouble(geos[0]);
         this.y = Double.parseDouble(geos[1]);
         this.z = Double.parseDouble(geos[2]);
+    }
+    public GeoLocationImpl(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public GeoLocationImpl(GeoLocation g) {
@@ -50,6 +56,13 @@ public class GeoLocationImpl implements GeoLocation {
 
         return Math.sqrt(dx + dy + dz);
 
+    }
+    public boolean equals(Object p) {
+        if (p == null || !(p instanceof GeoLocation)) {
+            return false;
+        }
+        GeoLocationImpl p2 = (GeoLocationImpl) p;
+        return ((this.x == p2.x) && (this.y == p2.y) && (this.z == p2.z));
     }
 
     @Override

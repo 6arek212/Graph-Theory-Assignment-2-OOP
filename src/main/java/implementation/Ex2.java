@@ -1,9 +1,12 @@
 package implementation;
 
+import GUI.GraphFrame;
+
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
@@ -39,13 +42,9 @@ public class Ex2 {
      *
      */
     public static void runGUI(String json_file) {
-        DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
+//        DirectedWeightedGraphAlgorithms alg = getGrapgAlgo(json_file);
 
-        JFrame frame = new JFrame();
-         frame.setSize(700, 700);
-        frame.setVisible(true);
-
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+//      new GraphFrame(alg);
     }
 
     public static void main(String[] args) {
