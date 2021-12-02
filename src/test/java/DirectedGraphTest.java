@@ -5,6 +5,7 @@ import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.models.GeoLocationImpl;
 import assignment2.models.NodeDataImpl;
 import assignment2.utils.DirectedGraphFactory;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -16,17 +17,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DirectedGraphTest {
 
-    @Test
-    //@Timeout(value = 400,unit = TimeUnit.MILLISECONDS)
-    public void bigRandomGraph() {
-        DirectedWeightedGraphAlgorithms alg = new AlgorithmsImpl();
-        alg.init(DirectedGraphFactory.instantiate(1000000,20,1));
+    static DirectedWeightedGraphAlgorithms alg;
 
+    @BeforeAll
+    public static void init() {
+        alg = new AlgorithmsImpl();
+        alg.init(DirectedGraphFactory.instantiate(100000, 20, 1));
+    }
+
+
+    @Test
+    //@Timeout(value = 5000,unit = TimeUnit.MILLISECONDS)
+    public void bigRandomGraph() {
         long start = System.currentTimeMillis();
         alg.isConnected();
         long end = System.currentTimeMillis();
         long totalTime = end - start;
-        System.out.println("totalTime "+totalTime);
+        System.out.println("totalTime " + totalTime);
     }
 
 
