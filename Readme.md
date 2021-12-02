@@ -1,15 +1,15 @@
 # Graph Theory
 ![Builds](https://github.com/project-chip/connectedhomeip/workflows/Builds/badge.svg)
 
-#### A part of university assignment
+#### A part of a university assignment
 
 
 </br>
 
 
 ## Project Overview
-Implementing weighted graph data structure alongside known graph algorithms 
-and a simple GUI
+Implementing weighted graph data structure alongside some known graph algorithms 
+and a simple GUI with JFrame
 
 </br>
 
@@ -25,7 +25,7 @@ and a simple GUI
 ## How To Use The GUI
 
 
-- `Add Node` click anyware on the canvase and enter a node key or `Graph -> Add Node`
+- `Add Node` click anywhere on the canvase and enter a node key or `Graph -> Add Node`
 - `Remove Node` go to : `Graph -> Remove Node` then enter node key
 - `Add Edge` : drag and drop form two different nodes or `Graph -> Add Edge`
 - `Remove Edge` : drag and drop form two different nodes or `Graph -> Remove Edge`

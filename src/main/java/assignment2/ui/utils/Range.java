@@ -5,13 +5,11 @@ public class Range {
     private double max;
 
     public Range(double min, double max) {
-        if (min == max)
-        {
+        if (min == max) {
             this.max = 1;
             this.min = 0;
             return;
         }
-
         this.max = max;
         this.min = min;
     }
@@ -35,10 +33,7 @@ public class Range {
     //R -> [0,1]
     public double norm(double d) {
         double x;
-        if (min != max)
-            x = (d - min) / (max - min);
-        else
-            x = 0;
+        x = (d - min) / (max - min);
         return x;
     }
 
@@ -46,7 +41,6 @@ public class Range {
     // [0 , 1] -> [min , max]
     public double getRange(double d) {
         double x = (d * (max - min)) + min;
-
         return x;
     }
 

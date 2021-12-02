@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Simple UI for presenting the graph
  */
-public class GraphView extends JPanel implements MouseListener {
+public class GraphView extends JPanel {
     private final int radios = 20;
     private final int padding = 70;
 
@@ -38,7 +38,84 @@ public class GraphView extends JPanel implements MouseListener {
     private JLabel graphText;
     private ActionListener actionListener;
 
-    private NodeData getNodeByCoordinates(double x, double y) {
+
+
+
+
+    public GraphView(DirectedWeightedGraphAlgorithms alg) {
+        initJframe();
+        initActionListener();
+        initWindowListener();
+        initLabels();
+        this.controller = new GraphViewModel(alg, actionListener);
+        Menu.initMenu(j, this, actionListener);
+        calculateRange();
+        addMouseListener(new ViewMouseClickHandler(actionListener, this));
+
+        j.setVisible(true);
+        j.add(this);
+    }
+
+
+    /**
+     *   initialize objects
+     */
+
+    private void initJframe() {
+        this.j = new JFrame();
+        j.setBackground(Color.WHITE);
+        j.setSize(800, 600);
+        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+
+    private void initLabels() {
+        numberOfNodes = new JLabel();
+        numberOfEdges = new JLabel();
+        numberOfNodes.setBounds(16, 16, padding + 16, 10);
+        numberOfEdges.setBounds(16, 32, padding + 16, 20);
+        graphText = new JLabel();
+        graphText.setText("Graph Theory");
+        j.add(numberOfEdges);
+        j.add(numberOfNodes);
+        j.add(graphText);
+    }
+
+
+    private void initActionListener() {
+        actionListener = (UIEvents event) -> {
+            if (event instanceof UIEvents.ShowMessage)
+                JOptionPane.showMessageDialog(null, ((UIEvents.ShowMessage) event).getMessage());
+            if (event instanceof UIEvents.Labels) {
+                numberOfEdges.setText("Edges : " + ((UIEvents.Labels) event).getNumberOfEdges() + "");
+                numberOfNodes.setText("Nodes : " + ((UIEvents.Labels) event).getNumberOfNode() + "");
+            }
+            if (event instanceof UIEvents.UpdateUi) {
+                updateUI();
+                j.repaint();
+            }
+            if (event instanceof UIEvents.CalculateRange) {
+                calculateRange();
+            }
+        };
+    }
+
+    private void initWindowListener() {
+        j.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                controller.clear();
+            }
+        });
+    }
+
+
+    /***
+     *     getting the node at specific coordinates
+     * @param x
+     * @param y
+     * @return
+     */
+    public NodeData getNodeByCoordinates(double x, double y) {
         GeoLocation g = new GeoLocationImpl(x, y, 0);
         List<NodeData> list = controller.getNodes();
         GeoLocation g2;
@@ -51,117 +128,12 @@ public class GraphView extends JPanel implements MouseListener {
         return null;
     }
 
-    NodeData fromNode;
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (getNodeByCoordinates(e.getX(), e.getY()) != null) {
-            actionListener.actionEvent(new UIEvents.ShowMessage("There is already an existing node in these coordinates"));
-            return;
-        }
-
-        String res = JOptionPane.showInputDialog(null, "Enter node KEY", "20");
-        int key;
-        try {
-            key = Integer.parseInt(res.trim());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            actionListener.actionEvent(new UIEvents.ShowMessage("enter numbers only separated by , !"));
-            return;
-        }
-
-        double worldX = screenXRange.toRange(worldXRange, e.getX());
-        double worldY = screenYRange.toRange(worldYRange, e.getY());
-        controller.onTriggerEvent(new GraphEvents.AddNode(worldX, worldY, key));
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        fromNode = getNodeByCoordinates(e.getX(), e.getY());
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (fromNode != null) {
-            NodeData node = getNodeByCoordinates(e.getX(), e.getY());
-            if (node != null && node != fromNode) {
-                String res = JOptionPane.showInputDialog(null, "Enter edge weight", "20");
-                double w;
-                try {
-                    w = Double.parseDouble(res.trim());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    actionListener.actionEvent(new UIEvents.ShowMessage("enter numbers only !"));
-                    return;
-                }
-
-                controller.onTriggerEvent(new GraphEvents.AddEdge(fromNode.getKey(), node.getKey(), w));
-            }
-        }
-        fromNode = null;
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-
-    public GraphView(DirectedWeightedGraphAlgorithms g) {
-        init(g);
-    }
-
-    // init JFrame
-    private void init(DirectedWeightedGraphAlgorithms alg) {
-        this.j = new JFrame();
-        j.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                controller.clear();
-            }
-        });
-        addMouseListener(this);
-        numberOfNodes = new JLabel();
-        numberOfEdges = new JLabel();
-        numberOfNodes.setBounds(16, 16, padding + 16, 10);
-        numberOfEdges.setBounds(16, 32, padding + 16, 10);
-        graphText = new JLabel();
-        graphText.setText("Graph Theory");
-        j.add(numberOfEdges);
-        j.add(numberOfNodes);
-        j.add(graphText);
-
-        actionListener = (UIEvents event) -> {
-            if (event instanceof UIEvents.ShowMessage)
-                JOptionPane.showMessageDialog(null, ((UIEvents.ShowMessage) event).getMessage());
-            if (event instanceof UIEvents.Labels) {
-                numberOfEdges.setText("Edges : " + ((UIEvents.Labels) event).getNumberOfEdges() + "");
-                numberOfNodes.setText("Nodes : " + ((UIEvents.Labels) event).getNumberOfNode() + "");
-            }
-            if (event instanceof UIEvents.UpdateUi) {
-                updateUI();
-                j.repaint();
-            }
-        };
-        this.controller = new GraphViewModel(alg, actionListener, screenXRange, screenYRange, worldXRange, worldYRange);
-        Menu.initMenu(j, this, actionListener);
-
-        j.setBackground(Color.WHITE);
-        j.setSize(800, 600);
-        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        j.setVisible(true);
-        j.add(this);
-        calculateRange();
-    }
-
-
+    /**
+     *   calculate the world to frame range , frame to world range
+     */
     public void calculateRange() {
         Iterator<NodeData> d = controller.getNodes().iterator();
-
         double minX = Integer.MAX_VALUE;
         double maxX = Integer.MIN_VALUE;
         double minY = Integer.MAX_VALUE;
@@ -182,12 +154,16 @@ public class GraphView extends JPanel implements MouseListener {
         }
         worldXRange = new Range(minX, maxX);
         worldYRange = new Range(minY, maxY);
-
-
         screenXRange = new Range(padding, j.getWidth() - padding);
         screenYRange = new Range(padding, j.getHeight() - padding);
     }
 
+
+    /**
+     *      paint graph and ui
+     *
+     * @param g
+     */
 
     @Override
     public void paint(Graphics g) {

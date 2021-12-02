@@ -18,21 +18,22 @@ import java.util.concurrent.Executors;
 
 
 /**
- * Controller class that handles the view data
+ * Controller class that handles the view logic
  */
 public class GraphViewModel {
     private final static int N_THREADS = 1;
-    private final static int SEED = 1;
 
-    private DirectedWeightedGraphAlgorithms algo;
+    // UI lists
     private List<NodeData> nodes;
     private List<EdgeData> edges;
+
+
+    private DirectedWeightedGraphAlgorithms algo;
     private ActionListener actionListener;
     private ExecutorService pool;
 
 
-    public GraphViewModel(DirectedWeightedGraphAlgorithms graphAlg, ActionListener actionListener, Range screenXRange, Range screenYRange, Range worldXRange,
-                          Range worldYRange) {
+    public GraphViewModel(DirectedWeightedGraphAlgorithms graphAlg, ActionListener actionListener) {
         this.actionListener = actionListener;
         this.algo = graphAlg;
         pool = Executors.newFixedThreadPool(N_THREADS);
@@ -54,8 +55,10 @@ public class GraphViewModel {
                     initTags();
                     actionListener.actionEvent(new UIEvents.UpdateUi());
                     if (event instanceof GraphEvents.LoadGraph) {
-                        if (algo.load(((GraphEvents.LoadGraph) event).filename))
+                        if (algo.load(((GraphEvents.LoadGraph) event).filename)) {
                             initNodeEdges();
+                            actionListener.actionEvent(new UIEvents.CalculateRange());
+                        }
                         else
                             actionListener.actionEvent(new UIEvents.ShowMessage("Error file was not found"));
                     }
@@ -102,10 +105,12 @@ public class GraphViewModel {
 
                     if (event instanceof GraphEvents.NewGraph) {
                         newGraph();
+                        actionListener.actionEvent(new UIEvents.CalculateRange());
                     }
 
                     if (event instanceof GraphEvents.RandomGraph) {
                         randomGraph();
+                        actionListener.actionEvent(new UIEvents.CalculateRange());
                     }
 
                     setTextUi();

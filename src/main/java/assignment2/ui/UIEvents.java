@@ -1,6 +1,11 @@
 package assignment2.ui;
 
 public class UIEvents {
+    public static class CalculateRange extends UIEvents {
+
+    }
+
+
     public static class UpdateUi extends UIEvents {
 
     }
