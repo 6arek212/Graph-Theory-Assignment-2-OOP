@@ -107,6 +107,44 @@ is connected there must be only **One** strongly connected component O(|V|+|E|)
 
 </br>
 
+
+
+
+# Running Times
+
+- Graph with 1000 nodes 20 edges
+  
+  - shortest path : 3ms 
+  - is connected : 4ms
+  - center : 4ms
+
+
+
+
+- Graph with 10000 nodes 20 edges
+
+  - shortest path : 7ms
+  - is connected : 22ms
+  - center : 17ms
+  
+
+- Graph with 100000 nodes 20 edges
+
+  - shortest path : 53ms
+  - is connected : 513ms
+  - center : 514ms
+
+
+
+- Graph with 1000000 nodes 20 edges
+
+  - shortest path : *
+  - is connected : *
+  - center : *
+
+</br>
+
+
 ## Authors
 
 * **Tarik Husin**  - linkedin -> https://www.linkedin.com/in/tarik-husin-706754184/
