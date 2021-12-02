@@ -39,9 +39,6 @@ public class GraphView extends JPanel {
     private ActionListener actionListener;
 
 
-
-
-
     public GraphView(DirectedWeightedGraphAlgorithms alg) {
         initJframe();
         initActionListener();
@@ -58,7 +55,7 @@ public class GraphView extends JPanel {
 
 
     /**
-     *   initialize objects
+     * initialize objects
      */
 
     private void initJframe() {
@@ -130,9 +127,10 @@ public class GraphView extends JPanel {
 
 
     /**
-     *   calculate the world to frame range , frame to world range
+     * calculate the world to frame range , frame to world range
      */
     public void calculateRange() {
+        System.out.println("Aaaaaaaaaaaaa");
         Iterator<NodeData> d = controller.getNodes().iterator();
         double minX = Integer.MAX_VALUE;
         double maxX = Integer.MIN_VALUE;
@@ -160,7 +158,7 @@ public class GraphView extends JPanel {
 
 
     /**
-     *      paint graph and ui
+     * paint graph and ui
      *
      * @param g
      */
@@ -200,9 +198,11 @@ public class GraphView extends JPanel {
                     g.setColor(Color.RED);
                 }
 
-                g.fillOval((int) worldXRange.toRange(screenXRange, node.getLocation().x()) - radios / 2, (int) worldYRange.toRange(screenYRange, node.getLocation().y()) - radios / 2, radios, radios);
+                int x = (int) worldXRange.toRange(screenXRange, node.getLocation().x()) - radios / 2;
+                int y = (int) worldYRange.toRange(screenYRange, node.getLocation().y()) - radios / 2;
+                g.drawString(node.getKey() + "", x, y -5);
+                g.fillOval(x, y, radios, radios);
             }
-
         }
     }
 

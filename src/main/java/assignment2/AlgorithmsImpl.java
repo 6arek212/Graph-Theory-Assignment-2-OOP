@@ -26,7 +26,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
 
     public AlgorithmsImpl(String file) {
-        load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/"+file);
+        load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" + file);
         //this.graph = DirectedGraphFactory.instantiate(1000000,20,1);
     }
 
@@ -254,47 +254,56 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-    private List<NodeData> tspFrom(NodeData root, List<NodeData> toGoTo) {
-        int[][] matrix = new int[toGoTo.size() + 1][toGoTo.size() + 1];
-        toGoTo.add(0, root);
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix.length; j++) {
-                if (i == j || i == 0 || j == 0)
-                    matrix[i][j] = 0;
+    void permute(List<NodeData> list, int k, List<List<NodeData>> res) {
+        for (int i = k; i < list.size(); i++) {
+            Collections.swap(list, i, k);
+            permute(list, k + 1, res);
+            Collections.swap(list, k, i);
+        }
+        if (k == list.size() - 1) {
+            res.add(list);
+        }
+    }
+
+
+    private double getPathCost(List<NodeData> list) {
+
+        double cost = 0;
+        for (int i = 0; i < list.size() - 1; i++) {
+            double path = shortestPathDist(list.get(i).getKey(), list.get(i + 1).getKey());
+            if (path == -1) {
+                return -1;
             }
+            cost += path;
         }
 
-
-        return null;
-
+        return cost;
     }
 
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        //TODO: NEEDS SOME WORK !
-        List<NodeData> c = new ArrayList<>(cities);
-        //TODO INIT WEIGHTS
-        double minCost = Integer.MAX_VALUE;
-        List<NodeData> minPath = new ArrayList<>();
-
-        for (int i = 0; i < c.size(); i++) {
-            List<NodeData> citiesToGoTo = new ArrayList<>(cities);
-            citiesToGoTo.remove(i);
-
-            List<NodeData> path = tspFrom(c.get(i), citiesToGoTo);
-            if (!path.isEmpty()) {
-                double cost = pathCost(path);
-                if (cost < minCost) {
-                    minPath = path;
-                    minCost = cost;
-                }
-            }
-        }
-
-        if (minPath.isEmpty())
+        if (cities.isEmpty())
             return null;
-        return minPath;
+
+        List<List<NodeData>> per = new ArrayList<>();
+        for (List<NodeData> nodesList : per)
+            System.out.println(nodesList);
+
+
+        return null;
+//        permute(cities, 0, per);
+//
+//        int min = 0;
+//        for (int i = 0; i < per.size() - 1; i++) {
+//            double cost = getPathCost(per.get(i));
+//            if (cost == -1)
+//                return null;
+//            if (cost < min) {
+//                min = i;
+//            }
+//        }
+//        return per.get(min);
     }
 
     @Override
@@ -329,6 +338,16 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     public static void main(String[] args) {
         AlgorithmsImpl ag = new AlgorithmsImpl("G1.json");
-        System.out.println(ag.isConnected());
+        //System.out.println(ag.isConnected());
+
+        List<NodeData> nodeData = new ArrayList<>();
+        Iterator<NodeData> it = ag.getGraph().nodeIter();
+        int cnt = 0;
+        while (it.hasNext() && cnt < 9) {
+            nodeData.add(it.next());
+            cnt++;
+        }
+
+        System.out.println(ag.tsp(nodeData));
     }
 }
