@@ -26,19 +26,32 @@ and a simple GUI with JFrame
 
 
 - `Add Node` click anywhere on the canvase and enter a node key or `Graph -> Add Node`
-- `Remove Node` go to : `Graph -> Remove Node` then enter node key
-- `Add Edge` : drag and drop form two different nodes or `Graph -> Add Edge`
-- `Remove Edge` : drag and drop form two different nodes or `Graph -> Remove Edge`
-- To excute an algorithm go to `Algorithms -> `
+- `Remove Node :` `Graph -> Remove Node` then enter node key
+- `Add Edge :` drag and drop form two different nodes or `Graph -> Add Edge`
+- `Remove Edge :` drag and drop form two different nodes or `Graph -> Remove Edge`
+-  To excute an algorithm `Algorithms -> `
+- `Save graph :` `File -> Save` saves the graph as json
+- `Open :` `File -> Open File` opens json graph file
+- `New Graph :` `File -> New Graph` creates an empty graph
+- `Random Graph :` `File -> Random Graph` creates a random graph
+
 
 </br>
 </br>
 
-### Example
+### Examples 
 </br>
+
+    Adding Nodes & Edges & Is Connceted Algorithm
 
 ![](howtouse.gif)
 
+</br>
+
+
+    Random Graph
+
+![](randomgraf.gif)
 
 </br>
 
