@@ -4,6 +4,7 @@ import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
 import assignment2.api.NodeData;
+import assignment2.utils.DirectedGraphFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,7 +27,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     public AlgorithmsImpl(String file) {
         load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/"+file);
-
+        //this.graph = DirectedGraphFactory.instantiate(1000000,20,1);
     }
 
 

@@ -138,7 +138,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
             return;
         EdgeData ed = new EdgeDataImpl(src, dest, w);
         this.edges.get(src).put(dest, ed);
-        this.edges.get(dest).put(src, ed);
+        this.edgesIn.get(dest).put(src, ed);
         numOfEdges++;
         changeHappened();
     }
