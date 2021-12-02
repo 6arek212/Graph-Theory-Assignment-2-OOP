@@ -89,6 +89,8 @@ public class Menu {
         //menu 2
         shortestPathDist.addActionListener((ActionEvent event) -> {
             String res = JOptionPane.showInputDialog(null, "Enter 2 nodes ids : ", "0,4");
+            if (res == null)
+                return;
             view.getController().onTriggerEvent(new GraphEvents.ShortestPathDist(Integer.parseInt(res.charAt(0) + ""),
                     Integer.parseInt(res.charAt(2) + "")));
             view.updateUI();
@@ -96,6 +98,8 @@ public class Menu {
 
         shortestPath.addActionListener((ActionEvent event) -> {
             String res = JOptionPane.showInputDialog(null, "Enter 2 nodes ids : ", "0,4");
+            if (res == null)
+                return;
             String[] data = res.split(",");
             int src, dest;
 
@@ -121,6 +125,8 @@ public class Menu {
 
         tsp.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter nodes ", "1,2,3,4,5");
+            if (res == null)
+                return;
             String[] nodes = res.split(",");
             List<Integer> cities = new ArrayList<>();
 
@@ -141,6 +147,8 @@ public class Menu {
         //graph
         deleteNode.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter node key ", "0");
+            if (res == null)
+                return;
             int key;
             try {
                 key = Integer.parseInt(res.trim());
@@ -155,6 +163,8 @@ public class Menu {
 
         addNode.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter node KEY,X,Y ", "20,50,50");
+            if (res == null)
+                return;
             double x, y;
             int key;
             try {
@@ -176,6 +186,8 @@ public class Menu {
 
         deleteEdge.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter node SRC,DEST ", "2,5");
+            if (res == null)
+                return;
             String[] data = res.split(",");
             int src, dest;
             try {
@@ -192,6 +204,8 @@ public class Menu {
 
         addEdge.addActionListener((ActionEvent e) -> {
             String res = JOptionPane.showInputDialog(null, "Enter node SRC,DEST,WEIGHT ", "2,5");
+            if (res == null)
+                return;
             String[] data = res.split(",");
             int src, dest;
             double w;
