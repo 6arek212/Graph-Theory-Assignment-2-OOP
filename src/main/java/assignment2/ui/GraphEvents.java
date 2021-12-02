@@ -60,16 +60,22 @@ public class GraphEvents {
 
 
     public static class AddNode extends GraphEvents {
-        private GeoLocation location;
+        private double x;
+        private double y;
         private int key;
 
-        public AddNode(GeoLocation location, int key) {
-            this.location = location;
+        public AddNode(double x, double y, int key) {
+            this.x = x;
+            this.y = y;
             this.key = key;
         }
 
-        public GeoLocation getLocation() {
-            return location;
+        public double getX() {
+            return x;
+        }
+
+        public double getY() {
+            return y;
         }
 
         public int getKey() {

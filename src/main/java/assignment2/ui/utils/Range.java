@@ -5,6 +5,13 @@ public class Range {
     private double max;
 
     public Range(double min, double max) {
+        if (min == max)
+        {
+            this.max = 1;
+            this.min = 0;
+            return;
+        }
+
         this.max = max;
         this.min = min;
     }
@@ -47,5 +54,13 @@ public class Range {
     public double toRange(Range range, double d) {
         double x = range.getRange(this.norm(d));
         return x;
+    }
+
+    @Override
+    public String toString() {
+        return "Range{" +
+                "min=" + min +
+                ", max=" + max +
+                '}';
     }
 }

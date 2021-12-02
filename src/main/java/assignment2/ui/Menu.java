@@ -167,7 +167,10 @@ public class Menu {
                 actionListener.actionEvent(new UIEvents.ShowMessage("enter numbers only separated by , !"));
                 return;
             }
-            view.getController().onTriggerEvent(new GraphEvents.AddNode(new GeoLocationImpl(x, y, 0), key));
+            double newX = view.screenXRange.toRange(view.worldXRange, x);
+            double newY = view.screenYRange.toRange(view.worldYRange, y);
+
+            view.getController().onTriggerEvent(new GraphEvents.AddNode(newX, newY, key));
         });
 
 

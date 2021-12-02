@@ -1,5 +1,7 @@
 package assignment2.ui;
 
+import assignment2.models.GeoLocationImpl;
+import assignment2.ui.utils.Range;
 import assignment2.utils.DirectedGraphFactory;
 import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
@@ -28,7 +30,9 @@ public class GraphViewModel {
     private ActionListener actionListener;
     private ExecutorService pool;
 
-    public GraphViewModel(DirectedWeightedGraphAlgorithms graphAlg, ActionListener actionListener) {
+
+    public GraphViewModel(DirectedWeightedGraphAlgorithms graphAlg, ActionListener actionListener, Range screenXRange, Range screenYRange, Range worldXRange,
+                          Range worldYRange) {
         this.actionListener = actionListener;
         this.algo = graphAlg;
         pool = Executors.newFixedThreadPool(N_THREADS);
@@ -85,7 +89,7 @@ public class GraphViewModel {
                     }
 
                     if (event instanceof GraphEvents.AddNode) {
-                        addNode(((GraphEvents.AddNode) event).getKey(), ((GraphEvents.AddNode) event).getLocation());
+                        addNode(((GraphEvents.AddNode) event).getKey(), ((GraphEvents.AddNode) event).getX(), ((GraphEvents.AddNode) event).getY());
                     }
 
                     if (event instanceof GraphEvents.DeleteEdge) {
@@ -109,6 +113,7 @@ public class GraphViewModel {
                 }
         );
     }
+
 
     private void randomGraph() {
         algo.init(DirectedGraphFactory.instantiate((int) (Math.random() * 100 + 1)));
@@ -139,15 +144,16 @@ public class GraphViewModel {
     }
 
 
-    private void addNode(int key, GeoLocation g) {
+    private void addNode(int key, double x, double y) {
         if (algo.getGraph().getNode(key) != null) {
             actionListener.actionEvent(new UIEvents.ShowMessage("Node already exists !"));
             return;
         }
-        NodeData node = new NodeDataImpl(key, g);
+        NodeData node = new NodeDataImpl(key, new GeoLocationImpl(x, y, 0));
         algo.getGraph().addNode(node);
         this.nodes.add(node);
     }
+
 
     private void removeNode(int key) {
         algo.getGraph().removeNode(key);
@@ -192,7 +198,6 @@ public class GraphViewModel {
 
     private void isConnected() {
         String msg;
-
         if (algo.isConnected())
             msg = "The graph is connected";
         else
@@ -208,7 +213,8 @@ public class GraphViewModel {
 
         Iterator<EdgeData> it = this.algo.getGraph().edgeIter();
         while (it.hasNext()) {
-            this.edges.add(it.next());
+            EdgeData ed = it.next();
+            this.edges.add(ed);
         }
         Iterator<NodeData> it1 = this.algo.getGraph().nodeIter();
         while (it1.hasNext()) {
