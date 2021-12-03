@@ -1,7 +1,6 @@
 package assignment2.ui;
 
 import assignment2.api.DirectedWeightedGraphAlgorithms;
-import assignment2.ui.utils.WorldGraph;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,26 +9,28 @@ import java.awt.event.WindowEvent;
 
 public class GraphViewFrame extends JFrame {
 
+    private final static int WIDTH = 1000;
+    private final static int HEIGHT = 700;
+
     private GraphViewModel controller;
-    private JFrame j;
     private JLabel numberOfNodes;
     private JLabel numberOfEdges;
     private ActionListener actionListener;
     private GraphViewPanel panel;
 
     public GraphViewFrame(DirectedWeightedGraphAlgorithms alg) {
-        initJframe();
         initActionListener();
         initLabels();
         initWindowListener();
 
         this.controller = new GraphViewModel(alg, actionListener);
         this.panel = new GraphViewPanel(controller);
+        panel.setBackground(Color.BLACK);
 
-        Menu.initMenu(j, panel, actionListener);
+        Menu.initMenu(this, panel, actionListener);
         panel.addMouseListener(new ViewMouseClickHandler(actionListener, panel));
-        j.add(panel);
-        j.setVisible(true);
+        add(panel);
+        initJframe();
     }
 
 
@@ -38,21 +39,26 @@ public class GraphViewFrame extends JFrame {
      */
 
     private void initJframe() {
-        this.j = new JFrame();
-        j.setBackground(Color.WHITE);
-        j.setSize(800, 600);
-        j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setTitle("Graph");
+        this.setSize(WIDTH, HEIGHT);
+        this.setLocationRelativeTo(null);
+        this.setBackground(Color.BLACK);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        this.setResizable(true);
+        this.setLocationRelativeTo(null);
     }
 
 
     private void initLabels() {
         numberOfNodes = new JLabel();
         numberOfEdges = new JLabel();
-        System.out.println(numberOfEdges);
         numberOfNodes.setBounds(16, 16, GraphViewPanel.padding + 16, 10);
         numberOfEdges.setBounds(16, 32, GraphViewPanel.padding + 16, 20);
-        j.add(numberOfEdges);
-        j.add(numberOfNodes);
+        numberOfEdges.setForeground(Color.WHITE);
+        numberOfNodes.setForeground(Color.WHITE);
+        add(numberOfEdges);
+        add(numberOfNodes);
     }
 
 
@@ -66,7 +72,7 @@ public class GraphViewFrame extends JFrame {
             }
             if (event instanceof UIEvents.UpdateUi) {
                 panel.updateUI();
-                j.repaint();
+                repaint();
             }
             if (event instanceof UIEvents.CalculateRange) {
                 panel.updateWorld();
@@ -75,7 +81,7 @@ public class GraphViewFrame extends JFrame {
     }
 
     private void initWindowListener() {
-        j.addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 controller.clear();
             }
