@@ -179,11 +179,16 @@ public class GraphViewModel {
             actionListener.actionEvent(new UIEvents.ShowMessage("There is no path as requested"));
             return;
         }
-        this.nodes = path;
-        this.edges = new ArrayList<>();
-        for (int i = 0; i < this.nodes.size() - 1; i++) {
-            this.edges.add(algo.getGraph().getEdge(this.nodes.get(i).getKey(), this.nodes.get(i + 1).getKey()));
+        for (NodeData n : path) {
+            n.setTag(NodeDataImpl.BLACK);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            actionListener.actionEvent(new UIEvents.UpdateUi());
         }
+
     }
 
     private void center() {

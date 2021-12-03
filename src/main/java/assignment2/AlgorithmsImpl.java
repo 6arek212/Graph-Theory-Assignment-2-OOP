@@ -238,6 +238,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     /**
      * assumes the graph is strongly connected , get the max distance from the node src
+     *
      * @param src
      * @return
      */
@@ -261,7 +262,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         for (int i = 0; i < path.size() - 1; i++) {
             sum += graph.getEdge(path.get(i).getKey(), path.get(i + 1).getKey()).getWeight();
         }
-
         return sum;
     }
 
@@ -278,20 +278,20 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-    private double getPathCost(List<NodeData> list) {
-
-        double cost = 0;
+    private List<NodeData> pathFrom(List<NodeData> list) {
+        List<NodeData> path = new ArrayList<>();
         for (int i = 0; i < list.size() - 1; i++) {
-            double path = shortestPathDist(list.get(i).getKey(), list.get(i + 1).getKey());
-            if (path == -1) {
-                return -1;
+            List<NodeData> p = shortestPath(list.get(i).getKey(), list.get(i + 1).getKey());
+            if (p == null) {
+                return null;
             }
-            cost += path;
+            if (i > 0)
+                p.remove(0);
+
+            path.addAll(p);
         }
-
-        return cost;
+        return path;
     }
-
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
@@ -301,16 +301,24 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         List<List<NodeData>> per = new ArrayList<>();
         permute(cities, 0, per);
 
-        int min = 0;
+        List<NodeData> currentPath = new ArrayList<>();
+        double minPathCost = Double.MAX_VALUE;
+
         for (int i = 0; i < per.size() - 1; i++) {
-            double cost = getPathCost(per.get(i));
-            if (cost == -1)
-                return null;
-            if (cost < min) {
-                min = i;
+            List<NodeData> current = pathFrom(per.get(i));
+            if (current != null) {
+                double cost = pathCost(current);
+                if (cost < minPathCost) {
+                    currentPath = current;
+                    minPathCost = cost;
+                }
             }
         }
-        return per.get(min);
+
+        if (currentPath.isEmpty())
+            return null;
+
+        return currentPath;
     }
 
     @Override
