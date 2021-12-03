@@ -39,6 +39,7 @@ public class Menu {
         menu2.add(shortestPathDist);
         menu2.add(isConnected);
         menu2.add(center);
+        menu2.add(tsp);
 
 
         //graph actions
