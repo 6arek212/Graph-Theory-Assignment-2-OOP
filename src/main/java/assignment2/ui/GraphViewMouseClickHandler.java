@@ -16,13 +16,13 @@ import java.awt.event.MouseListener;
  *
  *
  */
-public class ViewMouseClickHandler implements MouseListener {
+public class GraphViewMouseClickHandler implements MouseListener {
 
     private NodeData fromNode;
     private ActionListener actionListener;
     private GraphViewPanel view;
 
-    public ViewMouseClickHandler(ActionListener actionListener, GraphViewPanel view) {
+    public GraphViewMouseClickHandler(ActionListener actionListener, GraphViewPanel view) {
         this.actionListener = actionListener;
         this.view = view;
     }
