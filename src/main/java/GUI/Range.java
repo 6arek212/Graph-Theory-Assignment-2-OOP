@@ -2,7 +2,6 @@ package GUI;
 
 
 
-
 public class Range {
     private double _min, _max;
 

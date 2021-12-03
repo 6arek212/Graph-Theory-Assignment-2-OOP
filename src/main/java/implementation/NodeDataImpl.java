@@ -19,6 +19,7 @@ public class NodeDataImpl implements NodeData {
         this.info = "";
     }
 
+
     public NodeDataImpl( jsonDataNode nd ) {
         this.key = nd.getKey();
         this.tag = NodeDataImpl.WHITE;
