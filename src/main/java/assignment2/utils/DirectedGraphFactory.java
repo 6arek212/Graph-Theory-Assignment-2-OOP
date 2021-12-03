@@ -4,7 +4,6 @@ import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraph;
 import assignment2.models.GeoLocationImpl;
 import assignment2.models.NodeDataImpl;
-import assignment2.ui.utils.Range;
 
 import java.util.Random;
 

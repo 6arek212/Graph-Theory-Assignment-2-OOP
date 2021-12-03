@@ -8,10 +8,10 @@ import java.util.List;
 public class GraphEvents {
 
 
-
     public static class RandomGraph extends GraphEvents {
 
     }
+
     public static class NewGraph extends GraphEvents {
 
     }
@@ -64,9 +64,9 @@ public class GraphEvents {
         private double y;
         private int key;
 
-        public AddNode(double x, double y, int key) {
-            this.x = x;
-            this.y = y;
+        public AddNode(GeoLocation g, int key) {
+            this.x = g.x();
+            this.y = g.y();
             this.key = key;
         }
 

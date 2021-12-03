@@ -1,12 +1,10 @@
 package assignment2.ui;
 
 import assignment2.models.GeoLocationImpl;
-import assignment2.ui.utils.Range;
 import assignment2.utils.DirectedGraphFactory;
 import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
-import assignment2.api.GeoLocation;
 import assignment2.api.NodeData;
 import assignment2.models.NodeDataImpl;
 
