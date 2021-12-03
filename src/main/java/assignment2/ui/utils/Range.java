@@ -1,60 +1,49 @@
 package assignment2.ui.utils;
 
+
 public class Range {
-    private double min;
-    private double max;
+    private double _min, _max;
+
 
     public Range(double min, double max) {
-        if (min == max) {
-            this.max = 1;
-            this.min = 0;
-            return;
-        }
-        this.max = max;
-        this.min = min;
+        set_min(min);
+        set_max(max);
     }
 
-    public double getMin() {
-        return min;
-    }
-
-    public void setMin(double min) {
-        this.min = min;
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public void setMax(double max) {
-        this.max = max;
-    }
-
-    //R -> [0,1]
-    public double norm(double d) {
-        double x;
-        x = (d - min) / (max - min);
-        return x;
+    public Range(Range x) {
+        this(x._min, x._max);
     }
 
 
-    // [0 , 1] -> [min , max]
-    public double getRange(double d) {
-        double x = (d * (max - min)) + min;
-        return x;
+    public boolean isEmpty() {
+        return this.get_min()>this.get_max();
+    }
+    public double get_max() {
+        return _max;
+    }
+    public double get_length() {
+        return _max-_min;
+    }
+
+    private void set_max(double _max) {
+        this._max = _max;
+    }
+    public double get_min() {
+        return _min;
+    }
+    private void set_min(double _min) {
+        this._min = _min;
     }
 
 
-    public double toRange(Range range, double d) {
-        double x = range.getRange(this.norm(d));
-        return x;
+    public double getPortion(double d) {
+        double d1 = d-_min;
+        double ans = d1/get_length();
+        return ans;
     }
 
-    @Override
-    public String toString() {
-        return "Range{" +
-                "min=" + min +
-                ", max=" + max +
-                '}';
+
+    public double fromPortion(double p) {
+        return _min+p* get_length();
     }
 }

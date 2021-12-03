@@ -39,7 +39,7 @@ public class Ex2 {
      * @param json_file - a json file (e.g., G1.json - G3.gson)
      */
     public static void runGUI(String json_file) {
-        new GraphView(getGrapgAlgo(json_file));
+        new GraphViewFrame(getGrapgAlgo(json_file));
     }
 
 

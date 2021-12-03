@@ -1,6 +1,7 @@
 package assignment2.ui;
 
 import assignment2.api.NodeData;
+import assignment2.models.GeoLocationImpl;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -19,9 +20,9 @@ public class ViewMouseClickHandler implements MouseListener {
 
     private NodeData fromNode;
     private ActionListener actionListener;
-    private GraphView view;
+    private GraphViewPanel view;
 
-    public ViewMouseClickHandler(ActionListener actionListener, GraphView view) {
+    public ViewMouseClickHandler(ActionListener actionListener, GraphViewPanel view) {
         this.actionListener = actionListener;
         this.view = view;
     }
@@ -45,9 +46,7 @@ public class ViewMouseClickHandler implements MouseListener {
             return;
         }
 
-        double worldX = view.screenXRange.toRange(view.worldXRange, e.getX());
-        double worldY = view.screenYRange.toRange(view.worldYRange, e.getY());
-        view.getController().onTriggerEvent(new GraphEvents.AddNode(worldX, worldY, key));
+        view.getController().onTriggerEvent(new GraphEvents.AddNode(view.world2Frame.frameToWorld(new GeoLocationImpl(e.getX(), e.getY(), 0)), key));
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Menu {
 
-    public static void initMenu(JFrame j, GraphView view, ActionListener actionListener) {
+    public static void initMenu(JFrame j, GraphViewPanel view, ActionListener actionListener) {
         JMenuBar mb = new JMenuBar();
         JMenu menu1, menu2, menu3;
         JMenuItem open, save, shortestPath, shortestPathDist, isConnected, center,
@@ -177,10 +177,9 @@ public class Menu {
                 actionListener.actionEvent(new UIEvents.ShowMessage("enter numbers only separated by , !"));
                 return;
             }
-            double newX = view.screenXRange.toRange(view.worldXRange, x);
-            double newY = view.screenYRange.toRange(view.worldYRange, y);
 
-            view.getController().onTriggerEvent(new GraphEvents.AddNode(newX, newY, key));
+
+            view.getController().onTriggerEvent(new GraphEvents.AddNode(view.world2Frame.frameToWorld(new GeoLocationImpl(x, y, 0)), key));
         });
 
 
