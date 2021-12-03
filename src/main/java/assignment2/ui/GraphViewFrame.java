@@ -28,7 +28,7 @@ public class GraphViewFrame extends JFrame {
         panel.setBackground(Color.BLACK);
 
         Menu.initMenu(this, panel, actionListener);
-        panel.addMouseListener(new ViewMouseClickHandler(actionListener, panel));
+        panel.addMouseListener(new GraphViewMouseClickHandler(actionListener, panel));
         add(panel);
         initJframe();
     }
