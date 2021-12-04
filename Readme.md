@@ -13,9 +13,11 @@ and a simple GUI with JFrame
 
 </br>
 
-## How Run
+## How To Run
 
+`From the terminal : `
 
+    java -jar .\Ex2.jar G1.json
 
 
 </br>
