@@ -16,7 +16,7 @@ and a simple GUI with JFrame
 ## How To Run
 
 `From the terminal : `
-    
+
     java -jar .\Ex2.jar G1.json
 
 
