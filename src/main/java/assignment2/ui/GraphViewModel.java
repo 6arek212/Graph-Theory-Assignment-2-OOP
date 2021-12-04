@@ -1,6 +1,8 @@
 package assignment2.ui;
 
+import assignment2.api.GeoLocation;
 import assignment2.models.GeoLocationImpl;
+import assignment2.ui.utils.Range2Range;
 import assignment2.utils.DirectedGraphFactory;
 import assignment2.DirectedWeightedGraphImpl;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
@@ -116,6 +118,26 @@ public class GraphViewModel {
                 }
         );
     }
+
+    /***
+     *     getting the node at specific coordinates
+     * @param x
+     * @param y
+     * @return
+     */
+    public NodeData getNodeByCoordinates(Range2Range range, double x, double y) {
+        GeoLocation g = new GeoLocationImpl(x, y, 0);
+        List<NodeData> list = getNodes();
+        GeoLocation g2;
+        for (NodeData node : list) {
+            g2 = range.worldToframe(node.getLocation());
+            if (g2.distance(g) <= (int) (GraphViewPanel.radios / 2)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 
 
     private void randomGraph() {

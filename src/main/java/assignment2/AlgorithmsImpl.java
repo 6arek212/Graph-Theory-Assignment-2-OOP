@@ -351,17 +351,17 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-    public static void main(String[] args) {
-        AlgorithmsImpl ag = new AlgorithmsImpl("G1.json");
-
-        List<NodeData> nodeData = new ArrayList<>();
-        Iterator<NodeData> it = ag.getGraph().nodeIter();
-        int cnt = 0;
-        while (it.hasNext() && cnt < 9) {
-            nodeData.add(it.next());
-            cnt++;
-        }
-
-        System.out.println(ag.tsp(nodeData));
-    }
+//    public static void main(String[] args) {
+//        AlgorithmsImpl ag = new AlgorithmsImpl("G1.json");
+//
+//        List<NodeData> nodeData = new ArrayList<>();
+//        Iterator<NodeData> it = ag.getGraph().nodeIter();
+//        int cnt = 0;
+//        while (it.hasNext() && cnt < 9) {
+//            nodeData.add(it.next());
+//            cnt++;
+//        }
+//
+//        System.out.println(ag.tsp(nodeData));
+//    }
 }

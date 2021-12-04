@@ -29,7 +29,7 @@ public class GraphViewMouseClickHandler implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (view.getNodeByCoordinates(e.getX(), e.getY()) != null) {
+        if (view.getController().getNodeByCoordinates(view.world2Frame,e.getX(), e.getY()) != null) {
             actionListener.actionEvent(new UIEvents.ShowMessage("There is already an existing node in these coordinates"));
             return;
         }
@@ -51,13 +51,13 @@ public class GraphViewMouseClickHandler implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        fromNode = view.getNodeByCoordinates(e.getX(), e.getY());
+        fromNode = view.getController().getNodeByCoordinates(view.world2Frame, e.getX(), e.getY());
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (fromNode != null) {
-            NodeData node = view.getNodeByCoordinates(e.getX(), e.getY());
+            NodeData node = view.getController().getNodeByCoordinates(view.world2Frame, e.getX(), e.getY());
             if (node != null && node != fromNode) {
                 String res = JOptionPane.showInputDialog(null, "Enter edge weight", "20");
                 if (res == null)

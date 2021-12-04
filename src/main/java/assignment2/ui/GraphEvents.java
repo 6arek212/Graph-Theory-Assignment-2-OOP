@@ -2,12 +2,11 @@ package assignment2.ui;
 
 
 import assignment2.api.GeoLocation;
+import assignment2.ui.utils.Range2Range;
 
 import java.util.List;
 
 public class GraphEvents {
-
-
     public static class RandomGraph extends GraphEvents {
 
     }
