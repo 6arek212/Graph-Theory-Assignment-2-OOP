@@ -43,10 +43,12 @@ public class Ex2 {
 
 
     public static void main(String[] args) {
-        try{
-            runGUI(args[0]);
-        }catch (ArrayIndexOutOfBoundsException e){
-            System.err.println("Error graph filename was not found ! ,\nExample \"java -jar .\\Ex2.jar G1.json\" ");
-        }
+        runGUI("G1.json");
+
+//        try{
+//            runGUI(args[0]);
+//        }catch (ArrayIndexOutOfBoundsException e){
+//            System.err.println("Error graph filename was not found ! ,\nExample \"java -jar .\\Ex2.jar G1.json\" ");
+//        }
     }
 }
