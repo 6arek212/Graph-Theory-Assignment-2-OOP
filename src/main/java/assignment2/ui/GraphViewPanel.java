@@ -35,26 +35,6 @@ public class GraphViewPanel extends JPanel {
     }
 
 
-    /***
-     *     getting the node at specific coordinates
-     * @param x
-     * @param y
-     * @return
-     */
-    public NodeData getNodeByCoordinates(double x, double y) {
-        GeoLocation g = new GeoLocationImpl(x, y, 0);
-        List<NodeData> list = controller.getNodes();
-        GeoLocation g2;
-        for (NodeData node : list) {
-            g2 = world2Frame.worldToframe(node.getLocation());
-            if (g2.distance(g) <= (int) (radios / 2)) {
-                return node;
-            }
-        }
-        return null;
-    }
-
-
     public void updateWorld() {
         world2Frame.updateWorld(WorldGraph.getWorldRange2D(controller.getAlgo().getGraph(), world2Frame.getFrame()));
     }
