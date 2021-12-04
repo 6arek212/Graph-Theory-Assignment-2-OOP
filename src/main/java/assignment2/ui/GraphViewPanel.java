@@ -35,6 +35,9 @@ public class GraphViewPanel extends JPanel {
     }
 
 
+
+
+
     public void updateWorld() {
         world2Frame.updateWorld(WorldGraph.getWorldRange2D(controller.getAlgo().getGraph(), world2Frame.getFrame()));
     }
