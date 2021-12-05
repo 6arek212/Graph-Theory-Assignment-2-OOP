@@ -221,7 +221,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             return null;
         Iterator<NodeData> t = graph.nodeIter();
         double currentMin = Integer.MAX_VALUE;
-        int node = 0;
+        int node = -1;
 
         while (t.hasNext()) {
             NodeData nd = t.next();
@@ -243,7 +243,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      * @return
      */
     private double getMaxDistance(int src) {
-        double nodeMaxDist = Integer.MAX_VALUE;
+        double nodeMaxDist = Integer.MIN_VALUE;
 
         Iterator<NodeData> it = graph.nodeIter();
         while (it.hasNext()) {
