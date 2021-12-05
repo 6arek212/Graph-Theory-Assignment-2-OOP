@@ -17,24 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DirectedGraphTest {
 
-    static DirectedWeightedGraphAlgorithms alg;
-
-    @BeforeAll
-    public static void init() {
-        alg = new AlgorithmsImpl();
-        alg.init(DirectedGraphFactory.instantiate(100000, 20, 1));
-    }
-
-
-    @Test
-    //@Timeout(value = 5000,unit = TimeUnit.MILLISECONDS)
-    public void bigRandomGraph() {
-        long start = System.currentTimeMillis();
-        alg.isConnected();
-        long end = System.currentTimeMillis();
-        long totalTime = end - start;
-        System.out.println("totalTime " + totalTime);
-    }
 
 
     @Test

@@ -118,7 +118,7 @@ is connected there must be only **One** strongly connected component O(|V|+|E|)
   
   - shortest path : 3ms 
   - is connected : 4ms
-  - center : 4ms
+  - center : *
 
 
 
@@ -127,14 +127,14 @@ is connected there must be only **One** strongly connected component O(|V|+|E|)
 
   - shortest path : 7ms
   - is connected : 22ms
-  - center : 17ms
+  - center : *
   
 
 - Graph with 100000 nodes 20 edges
 
   - shortest path : 53ms
   - is connected : 513ms
-  - center : 514ms
+  - center : *
 
 
 
