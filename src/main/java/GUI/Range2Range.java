@@ -17,6 +17,14 @@ public class Range2Range {
         GeoLocationImpl ans = frame.fromPortion(d);
         return ans;
     }
+
+
+    public GeoLocation frameToWorld(GeoLocation p) {
+        GeoLocationImpl d = frame.getPortion(p);
+
+        return world.fromPortion(d);
+    }
+
     public Range2D getFrame() {
         return frame;
     }

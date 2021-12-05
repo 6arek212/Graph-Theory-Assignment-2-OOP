@@ -16,7 +16,7 @@ public class GraphFrame extends JFrame  {
     protected JTextField weightInput;
     private JButton addAllEdges,randomWeights;
     private RadioButtonListener rbl;
-    private ButtonListener bl;
+
 
     public GraphFrame(DirectedWeightedGraphAlgorithms g){
 
@@ -49,11 +49,24 @@ public class GraphFrame extends JFrame  {
     private void setSideMenu() {
         sideMenu.setLayout(new GridLayout(9,1));
 
-        buttons = new JRadioButton[1];
+        buttons = new JRadioButton[5];
 
         buttons[0] = new JRadioButton("Add Vertex");
         buttons[0].addActionListener(rbl);
         sideMenu.add(buttons[0]);
+        buttons[1] = new JRadioButton("Add Edge");
+        buttons[1].addActionListener(rbl);
+        sideMenu.add(buttons[1]);
+
+        buttons[2] = new JRadioButton("Shortest Path");
+        buttons[2].addActionListener(rbl);
+        sideMenu.add(buttons[2]);
+        buttons[3] = new JRadioButton("isConnected");
+        buttons[3].addActionListener(rbl);
+        sideMenu.add(buttons[3]);
+        buttons[4] = new JRadioButton("CENTER");
+        buttons[4].addActionListener(rbl);
+        sideMenu.add(buttons[4]);
 
     }
 

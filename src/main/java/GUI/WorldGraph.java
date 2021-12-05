@@ -36,6 +36,7 @@ public class WorldGraph {
         return new Range2D(xr,yr);
     }
 
+
     public static Range2Range w2f(DirectedWeightedGraph g, Range2D frame) {
         Range2D world = GraphRange(g);
         Range2Range ans = new Range2Range(world, frame);

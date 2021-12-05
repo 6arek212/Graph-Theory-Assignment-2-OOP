@@ -1,5 +1,5 @@
 package implementation;
-
+import java.awt.Point;
 import GUI.GraphFrame;
 import json_impl.fromJsonToGraph;
 import api.DirectedWeightedGraph;
@@ -21,12 +21,16 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     private DirectedWeightedGraph g;
     private DirectedWeightedGraph reverseGraph;
-    private TSP tsp;
 
+
+    public AlgorithmsImpl(DirectedWeightedGraph g){
+        this.g = g;
+
+    }
     @Override
     public void init(DirectedWeightedGraph g) {
         this.g = g;
-        this.tsp = new TSP();
+
     }
 
     @Override
@@ -287,10 +291,10 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     public List<NodeData> tsp(List<NodeData> cities) {
 
 
-        return  null;
+        return null;
     }
 
-    public double[][] allShortestDistances() {
+        public double[][] allShortestDistances() {
         double[][] dist = new double[g.nodeSize()][g.nodeSize() ];
         for (double[] ls : dist) {
             Arrays.fill(ls, Long.MAX_VALUE);
@@ -306,9 +310,39 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                 }
             }
         }
-        System.out.println(tsp.minCost(dist));
+//        System.out.println(tsp.minCost(dist));
         return dist;
     }
+//    public double[][] allShortestDistances() {
+//
+//        double[][] dist = new double[g.nodeSize()][g.nodeSize()];
+//        for (Iterator<NodeData> it = this.getGraph().nodeIter(); it.hasNext(); ) {
+//            NodeData nodeData = it.next();
+//
+//            for (Iterator<EdgeData> iter = this.getGraph().edgeIter(nodeData.getKey()); iter.hasNext(); ) {
+//                EdgeData edge = iter.next();
+//
+//                dist[edge.getSrc()][edge.getDest()] = edge.getWeight();
+//
+//            }
+//
+//            for(int i=0; i <dist.length; i++){
+//                for(int j=0; j<dist.length;j++){
+//                    if(j==i){
+//                        dist[i][j] = 0;
+//                    }else if(i!=j && dist[i][j] ==0){
+//                        dist[i][j] = Integer.MAX_VALUE;
+//                    }
+//
+//
+//
+//                }
+//            }
+//
+//        }
+//
+//        return dist;
+//    }
 
 
     @Override
@@ -342,43 +376,58 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 //        this.g = g;
 //    }
 
+    public void printMatrix(double[][] dist) {
+
+        for (int i = 0; i < dist.length; i++) {
+            String a = "{ ";
+            for (int j = 0; j < dist.length; j++) {
+                if(dist[i][j] == Integer.MAX_VALUE){
+                    a +="INF ,";
+                }else {
+
+                    a += dist[i][j] + ",";
+                }
+            }
+            a += "}";
+
+            System.out.println(a);
+        }
+
+    }
+    public NodeData findVertex(Point userClick) {
+        for (Iterator<NodeData> it = this.getGraph().nodeIter(); it.hasNext(); ) {
+           NodeDataImpl v = (NodeDataImpl)it.next();
+
+            if(v.getVisualNode().contains(userClick)) {
+                return v;
+            }
+        }
+        return null;
+
+    }
+
     public static void main(String[] args) {
         DirectedWeightedGraph g = new DirectedWeightedGraphImpl();
-//        g.addNode(new NodeDataImpl(1, null));
-//        g.addNode(new NodeDataImpl(2, null));
-//        g.addNode(new NodeDataImpl(3, null));
-//        g.addNode(new NodeDataImpl(4, null));
-//        g.addNode(new NodeDataImpl(5, null));
-//        g.addNode(new NodeDataImpl(6, null));
-//        g.addNode(new NodeDataImpl(7, null));
-//        g.connect(1, 2, 0);
-//        g.connect(2, 3, 0);
-//        g.connect(3, 1, 0);
-//        g.connect(3, 5, 0);
-//        g.connect(5, 6, 0);
-//        g.connect(6, 4, 0);
-//        g.connect(4, 5, 0);
-//        g.connect(7, 7, 0);
-//        AlgorithmsImpl ag = new AlgorithmsImpl(g);
-//        System.out.println(ag.shortestPathDist(1,2));
-//        ag.getGraph().removeNode(1);
-//        System.out.println(ag.getGraph());
-//        double[][] di = ag.allShortestDistances();
-//        System.out.println("ifConnected: " + ag.isConnected());
-//        ag.getGraph().connect(6,7 , 0);
-//        ag.getGraph().connect(5,3, 0);
-//        System.out.println("ifConnected: " + ag.isConnected());
 
-        AlgorithmsImpl ag = new AlgorithmsImpl();
-//       DirectedWeightedGraphAlgorithms ag = new AlgorithmsImpl();
-        System.out.println(ag.getGraph());
+
+        AlgorithmsImpl ag = new AlgorithmsImpl(g);
+
+
         ag.load("G2.json");
+//     ag.printMatrix(ag.allShortestDistances());
+//
+//        TSP2 tc = new TSP2(ag.allShortestDistances());
+//        tc.HoxFox();
 
-        System.out.println(ag.getGraph());
-        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
-        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
-        System.out.println("Center: ->" + ag.center());
-        System.out.println("isConnected: " + ag.isConnected());
+
+//            ag.tsp.bruteForce();
+
+
+//        System.out.println(ag.getGraph());
+//        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
+//        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
+//        System.out.println("Center: ->" + ag.center());
+//        System.out.println("isConnected: " + ag.isConnected());
         new GraphFrame(ag);
 
     }
