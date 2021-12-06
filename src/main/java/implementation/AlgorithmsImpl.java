@@ -1,6 +1,7 @@
 package implementation;
 import java.awt.Point;
 import GUI.GraphFrame;
+import GUI.Range2Range;
 import json_impl.fromJsonToGraph;
 import api.DirectedWeightedGraph;
 import api.DirectedWeightedGraphAlgorithms;
@@ -394,11 +395,12 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         }
 
     }
-    public NodeData findVertex(Point userClick) {
+    public NodeData findVertex(Point userClick , Range2Range WorldToFrame) {
         for (Iterator<NodeData> it = this.getGraph().nodeIter(); it.hasNext(); ) {
            NodeDataImpl v = (NodeDataImpl)it.next();
+           NodeDataImpl temp = new NodeDataImpl(v.getLocation() , WorldToFrame);
 
-            if(v.getVisualNode().contains(userClick)) {
+            if(temp.getVisualNode().contains(userClick)) {
                 return v;
             }
         }
@@ -413,7 +415,8 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         AlgorithmsImpl ag = new AlgorithmsImpl(g);
 
 
-        ag.load("G2.json");
+        ag.load("G3.json");
+
 //     ag.printMatrix(ag.allShortestDistances());
 //
 //        TSP2 tc = new TSP2(ag.allShortestDistances());

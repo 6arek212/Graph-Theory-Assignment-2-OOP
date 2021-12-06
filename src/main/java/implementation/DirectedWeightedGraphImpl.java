@@ -56,9 +56,10 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
      if(getNode(n.getKey()) == null) {
          Nodes.put(n.getKey(), n);
-         rankIn.put(n.getKey() , new ArrayList<>());
+
          HashMap<Integer, EdgeData> new_EdgeNode = new HashMap<>();
          Edges.put(n.getKey(), new_EdgeNode);
+         rankIn.put(n.getKey() , new ArrayList<>());
          ModeCounter++;
      }
 
@@ -71,21 +72,15 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
         if (getEdge(src, dest) == null) {
             EdgeData srcToDestEdge = new EdgeDataImpl(src, dest, w);
-            rankIn.get(dest).add(src);
+
             Edges.get(src).put(dest, srcToDestEdge);
+            rankIn.get(dest).add(src);
             ModeCounter++;
             EdgeCounter++;
 
         }
 
     }
-//
-//    @Override
-//    public Iterator<NodeData> nodeIter() {
-//        Iterator<NodeData> iterNodes = this.Nodes.values().iterator();
-//        return iterNodes;
-//
-//    }
 
     @Override
     public Iterator<NodeData> nodeIter() {

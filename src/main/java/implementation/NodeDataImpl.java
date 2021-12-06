@@ -32,7 +32,6 @@ public class NodeDataImpl implements NodeData {
     }
     public NodeDataImpl( GeoLocation GeoLoc , Range2Range WorldToFrame) {
 
-
         this.GeoLoc = GeoLoc;
         GeoLocation fp = WorldToFrame.worldToframe(this.GeoLoc);
         this.visualNode = new Ellipse2D.Double((int) fp.x() - r, (int) fp.y() - r, 2 * r, 2 * r);
@@ -113,6 +112,7 @@ public class NodeDataImpl implements NodeData {
         this.tag = t;
 
     }
+
 
     public  String toString(){
 

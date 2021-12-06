@@ -1,6 +1,7 @@
 package GUI;
 
 import api.GeoLocation;
+import api.NodeData;
 import implementation.GeoLocationImpl;
 import implementation.NodeDataImpl;
 
@@ -16,6 +17,7 @@ public class RadioButtonListener implements ActionListener {
 
 
     public RadioButtonListener(GraphFrame gui) {
+
         this.gui = gui;
     }
 
@@ -24,7 +26,7 @@ public class RadioButtonListener implements ActionListener {
 
      //adding new node to GUI
         if (e.getSource()==gui.buttons[0]) {
-            disableUnselectedButtons(0);
+//            disableUnselectedButtons(0);
             gui.graphPanel.setRadioButtonState("Add Vertex");
             gui.graphPanel.setIsEnabled(true);
             System.out.println("----------------Adding Vertex--------------");
@@ -32,28 +34,28 @@ public class RadioButtonListener implements ActionListener {
         }
         //adding new Edge to GUI
         if (e.getSource()==gui.buttons[1]) {
-            disableUnselectedButtons(1);
+//            disableUnselectedButtons(1);
             gui.graphPanel.setRadioButtonState("Add Edge");
             gui.graphPanel.setIsEnabled(true);
             System.out.println("----------------Adding Edge--------------");
 
         }
         if (e.getSource()==gui.buttons[2]) {
-            disableUnselectedButtons(2);
+//            disableUnselectedButtons(2);
             gui.graphPanel.setRadioButtonState("Shortest Path");
             gui.graphPanel.setIsEnabled(true);
             System.out.println("----------------Shortest Path--------------");
 
         }
         if (e.getSource()==gui.buttons[3]) {
-            disableUnselectedButtons(3);
+//            disableUnselectedButtons(3);
             gui.graphPanel.setRadioButtonState("isConnected");
             gui.graphPanel.setIsEnabled(true);
             System.out.println("----------------isConnected--------------");
 
         }
         if (e.getSource()==gui.buttons[4]) {
-            disableUnselectedButtons(4);
+//            disableUnselectedButtons(4);
             gui.graphPanel.setRadioButtonState("CENTER");
             gui.graphPanel.setIsEnabled(true);
             System.out.println("----------------CENTER--------------");
