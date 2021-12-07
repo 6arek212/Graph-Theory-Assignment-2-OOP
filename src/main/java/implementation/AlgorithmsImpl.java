@@ -379,7 +379,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return null;
 
     }
-    private Double getRouteCost(List<NodeData> nodes) {
+   public Double getRouteCost(List<NodeData> nodes) {
         double tempCost = 0;
         // Add route costs
 
@@ -404,13 +404,9 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 //            citits.add(n);
 //
 //        }
-        citits.add(ag.getGraph().getNode(1));
-        citits.add(ag.getGraph().getNode(2));
-        citits.add(ag.getGraph().getNode(3));
-        citits.add(ag.getGraph().getNode(4));
-        citits.add(ag.getGraph().getNode(5));
 
-        System.out.println("Cost 1: "+ ag.getRouteCost(ag.tsp(citits)) + "->" + ag.tsp(citits));
+
+//        System.out.println("Cost 1: "+ ag.getRouteCost(ag.tsp(citits)) + "->" + ag.tsp(citits));
 
 
 

@@ -283,24 +283,23 @@ public class GraphPanel extends JPanel implements MouseListener {
 
         if(radioButtonState.equals("TSP")){
             List<NodeData> nodes = new ArrayList<>();
-
-            while (true){
+            String st = JOptionPane.showInputDialog("Enter Number of Nodes: ");
+            int n = Integer.parseInt(st);
+            while (n>0){
                 String src = JOptionPane.showInputDialog("Enter key: ");
                 int keyZ = Integer.parseInt(src);
-                if(keyZ == -1){
-                    break;
-                }
 
                 nodes.add(graph.getGraph().getNode(keyZ));
-
+                n--;
             }
              List<NodeData> tsp =ag.tsp(nodes);
+
             for (int i = 0; i <tsp.size(); i++) {
-                NodeDataImpl n = (NodeDataImpl) tsp.get(i);
+                NodeDataImpl node = (NodeDataImpl) tsp.get(i);
 
-                n.setNodeState(Color.cyan);
+                node.setNodeState(Color.cyan);
 
-                drawNode(n, 7, this.getGraphics());
+                drawNode(node, 7, this.getGraphics());
                 updateUI();
                 try {
                     Thread.sleep(700);
@@ -309,8 +308,7 @@ public class GraphPanel extends JPanel implements MouseListener {
                 }
 
             }
-
-
+            JOptionPane.showMessageDialog(null, "Path Cost: "+ ag.getRouteCost(tsp)+ " ,  Path: " + tsp, "TSP", JOptionPane.INFORMATION_MESSAGE);
 
         }
 
