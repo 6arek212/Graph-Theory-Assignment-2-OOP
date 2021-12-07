@@ -309,7 +309,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     @Override
     public String toString() {
-        return "DirectedWeightedGraphImpl2{" +
+        return "DirectedWeightedGraphImpl{" +
                 "nodes=" + nodes +
                 ", edges=" + edges +
                 ", numOfEdges=" + numOfEdges +

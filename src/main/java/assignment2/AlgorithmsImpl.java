@@ -25,13 +25,15 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         this.graph = new DirectedWeightedGraphImpl();
     }
 
-    public AlgorithmsImpl(String file) {
-        load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" + file);
+    public AlgorithmsImpl(DirectedWeightedGraph graph) {
+        this.graph = new DirectedWeightedGraphImpl(graph);
     }
 
-    public AlgorithmsImpl(DirectedWeightedGraph graph) {
-        this.graph = graph;
+    public AlgorithmsImpl(String file) {
+        if (!load(Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" + file))
+            throw new RuntimeException("Error something went wrong while loading json file");
     }
+
 
     @Override
     public void init(DirectedWeightedGraph g) {

@@ -4,11 +4,16 @@ import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.ui.*;
 
+import java.nio.file.Paths;
+
 
 /**
  * This class is the main class for Ex2 - your implementation will be tested using this class.
  */
 public class Ex2 {
+    private static final String path = Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/";
+
+
     /**
      * This static function will be used to test your implementation
      *
@@ -16,7 +21,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
-        return new AlgorithmsImpl(json_file).getGraph();
+        return DirectedWeightedGraphImpl.load(path + json_file);
     }
 
 
@@ -27,7 +32,7 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraphAlgorithms getGrapgAlgo(String json_file) {
-        return new AlgorithmsImpl(json_file);
+        return new AlgorithmsImpl(getGrapg(json_file));
     }
 
     /**
@@ -44,9 +49,9 @@ public class Ex2 {
 
     public static void main(String[] args) {
         //runGUI("G1.json");
-        try{
+        try {
             runGUI(args[0]);
-        }catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Error graph filename was not found ! ,\nExample \"java -jar .\\Ex2.jar G1.json\" ");
         }
     }
