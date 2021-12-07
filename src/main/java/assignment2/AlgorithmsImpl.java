@@ -15,6 +15,7 @@ import assignment2.models.NodeDataImpl;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 
 
 public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
@@ -34,7 +35,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public void init(DirectedWeightedGraph g) {
-        this.graph = g;
+        this.graph = new DirectedWeightedGraphImpl(g);
     }
 
     @Override
@@ -129,6 +130,14 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    /**
+     * Gets a list of edges which the src is there source
+     * Complexity : O(|V|)
+     *
+     * @param g   graph
+     * @param src source node key
+     * @return list of edges which the src is there source
+     */
     private List<EdgeData> getAdj(DirectedWeightedGraph g, int src) {
         Iterator<EdgeData> iterator = g.edgeIter(src);
         List<EdgeData> adj = new ArrayList<>();
@@ -153,16 +162,18 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      *
      * @param src  - start node
      * @param dest - end (target) node
-     * @return
+     * @return path for the shortest path between src and dest
      */
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
         if (graph.nodeSize() == 0 || graph.getNode(dest) == null || graph.getNode(src) == null)
             return null;
 
-        DirectedWeightedGraph graph = new DirectedWeightedGraphImpl(this.graph);
+        //copy the graph
+        DirectedWeightedGraph graph = copy();
         Iterator<NodeData> iterator = graph.nodeIter();
 
+        //init nodes
         while (iterator.hasNext()) {
             NodeData d = iterator.next();
             d.setTag(NodeDataImpl.WHITE);
@@ -173,16 +184,12 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             }
         }
 
+
+        //run the algorithm
         HashMap<Integer, NodeData> dist = new HashMap<>();
         dist.put(src, graph.getNode(src));
 
-        PriorityQueue<NodeData> nodeQ = new PriorityQueue<>((NodeData o1, NodeData o2) -> {
-            if (o1.getWeight() < o2.getWeight())
-                return -1;
-            if (o1.getWeight() > o2.getWeight())
-                return 1;
-            return 0;
-        });
+        PriorityQueue<NodeData> nodeQ = new PriorityQueue<>(Comparator.comparingDouble(NodeData::getWeight));
         nodeQ.add(graph.getNode(src));
 
         while (!nodeQ.isEmpty()) {
@@ -204,6 +211,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         if (graph.getNode(dest).getWeight() == Double.MAX_VALUE)
             return null;
 
+        // get this graph nodes not the copied graph nodes
         List<NodeData> path = new ArrayList<>();
         NodeData node = graph.getNode(dest);
         while (node.getKey() != src) {
@@ -214,6 +222,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
         return path;
     }
+
 
     @Override
     public NodeData center() {
@@ -236,12 +245,11 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-
     /**
      * assumes the graph is strongly connected , get the max distance from the node src
      *
-     * @param src
-     * @return
+     * @param src the node source key
+     * @return max distance from this node to any other
      */
     private double getMaxDistance(int src) {
         double nodeMaxDist = Integer.MIN_VALUE;
@@ -258,6 +266,10 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    /**
+     * @param path list of adjacent nodes
+     * @return the sum of the edges weights
+     */
     private double pathCost(List<NodeData> path) {
         double sum = 0;
         for (int i = 0; i < path.size() - 1; i++) {
@@ -267,6 +279,16 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    /**
+     * This function gets a list of Nodes and returns all possible permutation
+     * Complexity O(N!) when N is the number of nodes
+     * <p>
+     * this function was taken from StackOverFlow !
+     *
+     * @param list permutate list
+     * @param k    start index
+     * @param res  the result will be added to this list
+     */
     void permute(List<NodeData> list, int k, List<List<NodeData>> res) {
         for (int i = k; i < list.size(); i++) {
             Collections.swap(list, i, k);
@@ -279,6 +301,10 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    /**
+     * @param list path list (the nodes not necessarily adjacent)
+     * @return the full path between the nodes in the list
+     */
     private List<NodeData> pathFrom(List<NodeData> list) {
         List<NodeData> path = new ArrayList<>();
         for (int i = 0; i < list.size() - 1; i++) {
@@ -352,17 +378,4 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-//    public static void main(String[] args) {
-//        AlgorithmsImpl ag = new AlgorithmsImpl("G1.json");
-//
-//        List<NodeData> nodeData = new ArrayList<>();
-//        Iterator<NodeData> it = ag.getGraph().nodeIter();
-//        int cnt = 0;
-//        while (it.hasNext() && cnt < 9) {
-//            nodeData.add(it.next());
-//            cnt++;
-//        }
-//
-//        System.out.println(ag.tsp(nodeData));
-//    }
 }

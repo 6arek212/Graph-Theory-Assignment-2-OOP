@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
@@ -33,7 +34,6 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
     public static DirectedWeightedGraph load(String filename) {
         try {
-            //Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/" +
             DirectedWeightedGraphJson dgj = new Gson()
                     .fromJson(
                             new FileReader(filename),
@@ -47,7 +47,11 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     }
 
 
-    // construct this object from json object
+    /**
+     * construct this object from json object
+     *
+     * @param dgj Json Graph
+     */
     public DirectedWeightedGraphImpl(DirectedWeightedGraphJson dgj) {
         this.nodes = new HashMap<>();
         numOfEdges = dgj.edges.size();
@@ -147,7 +151,7 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
     @Override
     public Iterator<NodeData> nodeIter() {
         return new Iterator<NodeData>() {
-            Iterator<NodeData> it = nodes.values().iterator();
+            private Iterator<NodeData> it = nodes.values().iterator();
             private int mc = modeCounter;
 
             @Override
@@ -205,9 +209,14 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
 
             @Override
             public void remove() {
+                i--;
+                if (i < 0)
+                    throw new RuntimeException("");
                 EdgeData eg = ed.remove(i);
                 removeEdge(eg.getSrc(), eg.getDest());
+                this.mc = modeCounter;
             }
+
         };
     }
 
@@ -217,26 +226,32 @@ public class DirectedWeightedGraphImpl implements DirectedWeightedGraph {
         if (!nodes.containsKey(node_id))
             throw new RuntimeException("node id not exists");
         return new Iterator<EdgeData>() {
-            int mc = modeCounter;
-            Iterator<EdgeData> it = edges.get(node_id).values().iterator();
+            private int mc = modeCounter;
+            private List<EdgeData> it = new ArrayList<>(edges.get(node_id).values());
+            private int i = 0;
 
             @Override
             public boolean hasNext() {
                 if (mc != modeCounter)
                     throw new RuntimeException("object has been changed");
-                return it.hasNext();
+                return i < it.size();
             }
 
             @Override
             public EdgeData next() {
                 if (mc != modeCounter)
                     throw new RuntimeException("object has been changed");
-                return it.next();
+                return it.get(i++);
             }
 
             @Override
             public void remove() {
-                it.remove();
+                i--;
+                if (i < 0)
+                    throw new RuntimeException("");
+                EdgeData eg = it.remove(i);
+                removeEdge(eg.getSrc(), eg.getDest());
+                this.mc = modeCounter;
             }
         };
     }

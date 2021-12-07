@@ -35,9 +35,8 @@ public class GraphViewFrame extends JFrame {
 
 
     /**
-     * initialize objects
+     * initialize JFrame
      */
-
     private void initJframe() {
         this.setTitle("Graph");
         this.setSize(WIDTH, HEIGHT);
@@ -62,6 +61,9 @@ public class GraphViewFrame extends JFrame {
     }
 
 
+    /**
+     *  View action Listener
+     */
     private void initActionListener() {
         actionListener = (UIEvents event) -> {
             if (event instanceof UIEvents.ShowMessage)
@@ -80,6 +82,9 @@ public class GraphViewFrame extends JFrame {
         };
     }
 
+    /**
+     * listener to clear the controller tasks when exist
+     */
     private void initWindowListener() {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

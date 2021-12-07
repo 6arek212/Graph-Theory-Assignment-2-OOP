@@ -20,6 +20,17 @@ public class DirectedGraphTest {
 
 
     @Test
+    public void add1000Nodes(){
+        long start = System.currentTimeMillis();
+        DirectedWeightedGraph graph = DirectedGraphFactory.instantiate(1000,20,1);
+        long end = System.currentTimeMillis();
+        long totalTime = end - start;
+        System.out.println("totalTime " + totalTime);
+    }
+
+
+
+    @Test
     public void addNode() {
         DirectedWeightedGraph graph = new DirectedWeightedGraphImpl();
         graph.addNode(new NodeDataImpl(0, new GeoLocationImpl(2, 3, 0)));

@@ -1,5 +1,11 @@
 package assignment2.ui;
 
+
+/**
+ *
+ *    This class represent the events to be shown on the screen
+ *
+ */
 public class UIEvents {
     public static class CalculateRange extends UIEvents {
 

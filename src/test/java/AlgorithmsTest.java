@@ -3,6 +3,7 @@ import assignment2.DirectedWeightedGraphImpl;
 import assignment2.Ex2;
 import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
+import assignment2.api.NodeData;
 import assignment2.utils.DirectedGraphFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class AlgorithmsTest {
     private final static int SEED = 1;
@@ -23,19 +26,6 @@ public class AlgorithmsTest {
     @BeforeAll
     public static void init() {
         alg = new AlgorithmsImpl("G1.json");
-    }
-
-
-    @Test
-    //@Timeout(value = 5000,unit = TimeUnit.MILLISECONDS)
-    public void bigRandomGraph() {
-        DirectedWeightedGraphAlgorithms alg = new AlgorithmsImpl();
-        alg.init(DirectedGraphFactory.instantiateConnectedGraph(1000, SEED));
-        long start = System.currentTimeMillis();
-        alg.center();
-        long end = System.currentTimeMillis();
-        long totalTime = end - start;
-        System.out.println("totalTime " + totalTime);
     }
 
 
@@ -53,7 +43,17 @@ public class AlgorithmsTest {
 
     @Test
     public void tsp() {
+        List<NodeData> cities = new ArrayList<>();
+        cities.add(alg.getGraph().getNode(1));
+        cities.add(alg.getGraph().getNode(2));
+        cities.add(alg.getGraph().getNode(3));
+        cities.add(alg.getGraph().getNode(4));
+        cities.add(alg.getGraph().getNode(5));
 
+        List<NodeData> path =alg.tsp(cities);
+        for (int i = 0; i < path.size(); i++) {
+            assertEquals(i+1 , path.get(i).getKey());
+        }
     }
 
 

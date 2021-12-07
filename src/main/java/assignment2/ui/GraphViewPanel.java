@@ -102,6 +102,7 @@ public class GraphViewPanel extends JPanel {
 
         GeoLocation pos = node.getLocation();
         GeoLocation fp = world2Frame.worldToframe(pos);
+        g.setFont(new Font("Dialog" , Font.BOLD , 16));
         g.drawString(node.getKey() + "", (int) fp.x() - radios / 2, (int) fp.y() - radios / 2);
         g.fillOval((int) fp.x() - radios / 2, (int) fp.y() - radios / 2, radios, radios);
     }

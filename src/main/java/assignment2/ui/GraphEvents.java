@@ -6,6 +6,12 @@ import assignment2.ui.utils.Range2Range;
 
 import java.util.List;
 
+
+/**
+ *
+ *     This class represent the Graph GUI events
+ *
+ */
 public class GraphEvents {
     public static class RandomGraph extends GraphEvents {
 

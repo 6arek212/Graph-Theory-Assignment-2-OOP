@@ -47,7 +47,9 @@ public class GraphViewModel {
      * <p>
      * Only one task will be executed at a time
      *
-     * @param event
+     * all events run through this function
+     *
+     * @param event Graph event
      */
     public void onTriggerEvent(GraphEvents event) {
         pool.execute(

@@ -7,6 +7,11 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ *  Menu Bar logic
+ *
+ */
 public class Menu {
 
     public static void initMenu(JFrame j, GraphViewPanel view, ActionListener actionListener) {
