@@ -296,33 +296,28 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        // check if sub graph is connected
-        if(!isConnected()){
-            return null;
-        }
-        List<Integer> targets = new ArrayList<>();
-        for (NodeData n : cities) {
-            targets.add(n.getKey());
-        }
 
-        List<Integer> targetTo = new ArrayList<Integer>(targets);
+        //copy of targets to do adjustments
+        List<NodeData> targetTo = new ArrayList<NodeData>(cities);
         List<NodeData> res = new ArrayList<NodeData>();
-        int src = targetTo.get(0);
-        if (targets.size() == 1)
+        int src = targetTo.get(0).getKey();
+        if (cities.size() == 1)
             return shortestPath(src, src);
 
-        int dest = targetTo.get(1);
+        int dest = targetTo.get(1).getKey();
 
         while (!targetTo.isEmpty()) {
 
             if (!res.isEmpty() && res.get(res.size() - 1).getKey() == src)
                 res.remove(res.size() - 1);
+
+
             List<NodeData> tmp = shortestPath(src, dest);
-            targetTo.removeAll(nodesToInts(tmp));
+            targetTo.removeAll(tmp);
             res.addAll(tmp);
             if (!targetTo.isEmpty()) {
                 src = dest;
-                dest = targetTo.get(0);
+                dest = targetTo.get(0).getKey();
             }
 
         }

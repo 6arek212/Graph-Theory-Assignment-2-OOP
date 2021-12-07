@@ -283,8 +283,10 @@ public class GraphPanel extends JPanel implements MouseListener {
 
         if(radioButtonState.equals("TSP")){
             List<NodeData> nodes = new ArrayList<>();
-            String st = JOptionPane.showInputDialog("Enter Number of Nodes: ");
-            int n = Integer.parseInt(st);
+
+                String st = JOptionPane.showInputDialog("Enter Number of Nodes: ");
+                int n = Integer.parseInt(st);
+
             while (n>0){
                 String src = JOptionPane.showInputDialog("Enter key: ");
                 int keyZ = Integer.parseInt(src);
