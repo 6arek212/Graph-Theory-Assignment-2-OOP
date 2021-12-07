@@ -8,8 +8,6 @@ import implementation.NodeDataImpl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
@@ -20,12 +18,14 @@ import java.util.List;
 public class GraphPanel extends JPanel implements MouseListener {
     protected static DirectedWeightedGraphAlgorithms graph;
     private WorldGraph worldGraph;
+
     private Range2Range WorldToFrame;
     private GraphFrame frame;
     private RadioButtonListener radioButtonListener;
     private static String radioButtonState;
     private static boolean isEnabled;
-
+    private final int NODE_SIZE = 10; // need to be even
+    private final int ARROW_SIZE = NODE_SIZE - 2;
 
     private static NodeDataImpl endpt1, endpt2;
 
@@ -64,13 +64,13 @@ public class GraphPanel extends JPanel implements MouseListener {
         while (iter.hasNext()) {
             NodeDataImpl n = (NodeDataImpl) iter.next();
 
-//            g2d.setColor(Color.red);
+
              n.setNodeState(Color.RED);
             drawNode((NodeDataImpl) n, 7, g);
             Iterator<EdgeData> itr = graph.getGraph().edgeIter(n.getKey());
             while (itr.hasNext()) {
                 EdgeData e = itr.next();
-//                g2d.setColor(Color.BLACK);
+
 
                 drawEdge(e, g);
             }
@@ -90,12 +90,11 @@ public class GraphPanel extends JPanel implements MouseListener {
         g2d.setColor(Color.ORANGE);
         g2d.fill(line);
         g2d.draw(line);
+        g.setColor(Color.yellow);
+//        g.fillRect(((int) (s0.x() + 7 * d0.x()) / 8 - ARROW_SIZE / 2), (int) ((s0.y() + 7 * d0.y()) / 8 - ARROW_SIZE / 2), ARROW_SIZE, ARROW_SIZE);
+
         if (e.getWeight() != 0) {
             g2d.setFont(new Font("Dialog", Font.PLAIN, 10));
-
-//            g2d.setColor(Color.cyan);
-//            g2d.drawString("" + e.getWeight(), (int) ((s0.x() + d0.x()) / 2), (int) (s0.y() + d0.y()) / 2);
-
         }
 
 
@@ -180,27 +179,34 @@ public class GraphPanel extends JPanel implements MouseListener {
             if (endpt1 == null) {
 
                 endpt1 = (NodeDataImpl) ag.findVertex(e.getPoint(), WorldToFrame);
+                JOptionPane.showMessageDialog(null, "Node 1: " + endpt1, "Add Edge", JOptionPane.INFORMATION_MESSAGE);
 
-            } else {
+
+            } else if(endpt1 != null && endpt2 == null) {
                 endpt2 = (NodeDataImpl) ag.findVertex(e.getPoint(), WorldToFrame);
+                JOptionPane.showMessageDialog(null, "Node 2: " + endpt2, "Add Edge", JOptionPane.INFORMATION_MESSAGE);
 
             }
-            if (endpt1 != null && endpt2 != null) {
-                String w = JOptionPane.showInputDialog("Enter Weight: ");
-                double weight = Double.parseDouble(w);
+            if (endpt1 != null && endpt2 != null&& !endpt1.equals(endpt2)) {
+//                String w = JOptionPane.showInputDialog("Enter Weight: ");
+                double weight = Double.parseDouble(JOptionPane.showInputDialog("Enter Weight: "));
                 try {
 
                     graph.getGraph().connect(endpt1.getKey(), endpt2.getKey(), weight);
                     System.out.println(graph.getGraph().getEdge(endpt1.getKey(), endpt2.getKey()));
+
                     this.paintComponent(this.getGraphics());
                     updateUI();
                     endpt1 = null;
                     endpt2 = null;
 
+
                 } catch (NullPointerException ex) {
 
                 }
             }
+
+
         }
 
 
@@ -211,27 +217,52 @@ public class GraphPanel extends JPanel implements MouseListener {
 
             String dest = JOptionPane.showInputDialog("Enter dest: ");
             int to = Integer.parseInt(dest);
-            List<NodeData> shortestPathList = graph.shortestPath(from, to);
-            for (int i = 0; i < graph.shortestPath(from, to).size(); i++) {
-                NodeDataImpl n = (NodeDataImpl) shortestPathList.get(i);
-               n.setNodeState(Color.cyan);
-                drawNode( n, 7, this.getGraphics());
-                updateUI();
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+            try {
+                List<NodeData> shortestPathList = graph.shortestPath(from, to);
+
+                for (int i = 0; i < graph.shortestPath(from, to).size(); i++) {
+                    NodeDataImpl n = (NodeDataImpl) shortestPathList.get(i);
+                    n.setNodeState(Color.cyan);
+                    drawNode(n, 7, this.getGraphics());
+                    updateUI();
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+
+                String ans = "Shortest Path Dist: " + graph.shortestPathDist(from, to) + ", Path List: " + graph.shortestPath(from, to);
+                JOptionPane.showMessageDialog(null, ans, "Shortest Path", JOptionPane.INFORMATION_MESSAGE);
+            }catch (IndexOutOfBoundsException ex){
+                JOptionPane.showMessageDialog(null, "No Path Between", "Shortest Path", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
+        Random rand = new Random();
+        int r = rand.nextInt(255);
+        int g = rand.nextInt(255);
+        int b = rand.nextInt(255);
+        Color randomColor = new Color(r , g,b);
+        if (radioButtonState.equals("isConnected")) {
+            List<Set<NodeData>> list = ag.SCC();
+            for (Set<NodeData> set : list) {
+                for(NodeData nodeData : set){
+                    NodeDataImpl n = (NodeDataImpl) nodeData;
+                    n.setNodeState(randomColor);
+                    drawNode(n, 7, this.getGraphics());
+                    updateUI();
+                    try {
+                        Thread.sleep(400);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
             }
 
-            String ans = "Shortest Path Dist: " + graph.shortestPathDist(from, to) + ", Path List: " + graph.shortestPath(from, to);
-            JOptionPane.showMessageDialog(null, ans, "Shortest Path", JOptionPane.INFORMATION_MESSAGE);
 
-        }
-
-
-        if (radioButtonState.equals("isConnected")) {
             String ans = "isConnected: " + String.valueOf(graph.isConnected());
             JOptionPane.showMessageDialog(null, ans, "isConnected", JOptionPane.INFORMATION_MESSAGE);
 
@@ -249,6 +280,40 @@ public class GraphPanel extends JPanel implements MouseListener {
             JOptionPane.showMessageDialog(null, ans, "CENTER", JOptionPane.INFORMATION_MESSAGE);
             updateUI();
         }
+
+        if(radioButtonState.equals("TSP")){
+            List<NodeData> nodes = new ArrayList<>();
+
+            while (true){
+                String src = JOptionPane.showInputDialog("Enter key: ");
+                int keyZ = Integer.parseInt(src);
+                if(keyZ == -1){
+                    break;
+                }
+
+                nodes.add(graph.getGraph().getNode(keyZ));
+
+            }
+             List<NodeData> tsp =ag.tsp(nodes);
+            for (int i = 0; i <tsp.size(); i++) {
+                NodeDataImpl n = (NodeDataImpl) tsp.get(i);
+
+                n.setNodeState(Color.cyan);
+
+                drawNode(n, 7, this.getGraphics());
+                updateUI();
+                try {
+                    Thread.sleep(700);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+
+
+
+        }
+
 
     }
 

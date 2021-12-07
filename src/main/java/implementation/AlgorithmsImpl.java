@@ -1,5 +1,7 @@
 package implementation;
+
 import java.awt.Point;
+
 import GUI.GraphFrame;
 import GUI.Range2Range;
 import json_impl.fromJsonToGraph;
@@ -18,16 +20,17 @@ import java.util.*;
 import java.io.*;
 
 public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
-    static final int WHITE = 1, GRAY = -1, BLACK = 0;
+
 
     private DirectedWeightedGraph g;
     private DirectedWeightedGraph reverseGraph;
 
 
-    public AlgorithmsImpl(DirectedWeightedGraph g){
+    public AlgorithmsImpl(DirectedWeightedGraph g) {
         this.g = g;
 
     }
+
     @Override
     public void init(DirectedWeightedGraph g) {
         this.g = g;
@@ -72,7 +75,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     @Override
     public boolean isConnected() {
 
-        System.out.println("SCC ---->" + SCC());
+
         if (SCC().size() == 1)
             return true;
 
@@ -174,6 +177,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     }
 
+
     @Override
     public double shortestPathDist(int src, int dest) {
 
@@ -192,25 +196,37 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
     @Override
     public List<NodeData> shortestPath(int src, int dest) {
-        HashMap<Integer, NodeData> dist = new HashMap<Integer, NodeData>();
+
+
+        PriorityQueue<NodeData> dist = new PriorityQueue<>((NodeData o1, NodeData o2) -> {
+            if (o1.getWeight() < o2.getWeight())
+                return -1;
+            if (o1.getWeight() > o2.getWeight())
+                return 1;
+            return 0;
+        });
         for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
             NodeData nodeData = it.next();
             nodeData.setWeight(Integer.MAX_VALUE);
         }
+        NodeData start = g.getNode(src);
         HashMap<Integer, ArrayList<NodeData>> shortestListsMap = new HashMap<>();
         for (Iterator<NodeData> it = g.nodeIter(); it.hasNext(); ) {
             NodeData nodeData = it.next();
             shortestListsMap.put(nodeData.getKey(), new ArrayList<>());
+            shortestListsMap.get(nodeData.getKey()).add(start);
         }
-        NodeData start = g.getNode(src);
+
         start.setWeight(0);
-        dist.put(src, start);
+        dist.add(start);
+        shortestListsMap.get(dest).add(start);
+
         while (!dist.isEmpty()) {
-            NodeData currentNode = this.MinWeightedNode(dist);
+
+            NodeData currentNode = dist.poll();
             if (currentNode.getKey() == dest) {
                 break;
             }
-
             int currentNodeKey = currentNode.getKey();
             double currentNodeDistance = currentNode.getWeight();
             dist.remove(currentNodeKey);
@@ -225,27 +241,16 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                     currNeighborPath.add(neighborNode);
                     shortestListsMap.put(neighborNode.getKey(), currNeighborPath);
                     neighborNode.setWeight(CurrNodeAndEdgeWeight);
-                    dist.put(neighborNode.getKey(), neighborNode);
+//                    dist.put(neighborNode.getKey(), neighborNode);
+                    dist.add(neighborNode);
                 }
             }
 
         }
 
+
         return shortestListsMap.get(dest);
 
-    }
-
-    private NodeData MinWeightedNode(HashMap<Integer, NodeData> nodes_Map) {
-        NodeData minNode = null;
-        double minDis = Integer.MAX_VALUE;
-        for (NodeData node : nodes_Map.values()) {
-            if (node.getWeight() <= minDis) {
-                minNode = node;
-                minDis = node.getWeight();
-            }
-        }
-
-        return minNode;
     }
 
     public double maxInThePath(NodeData nodeData) {
@@ -288,62 +293,50 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return ans;
     }
 
+
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-
-
-        return null;
-    }
-
-        public double[][] allShortestDistances() {
-        double[][] dist = new double[g.nodeSize()][g.nodeSize() ];
-        for (double[] ls : dist) {
-            Arrays.fill(ls, Long.MAX_VALUE);
+        // check if sub graph is connected
+        if(!isConnected()){
+            return null;
         }
-//        System.out.println(shortestPathDist(0,2));
-        for (int i = 0; i < dist.length; i++) {
-            for (int j = 0; j < dist.length; j++) {
+        List<Integer> targets = new ArrayList<>();
+        for (NodeData n : cities) {
+            targets.add(n.getKey());
+        }
 
-                if (i == j) {
-                    dist[i][j] = 0;
-                } else if (shortestPathDist( i ,j) != -1){
-                    dist[i][j] = shortestPathDist(i ,j);
-                }
+        List<Integer> targetTo = new ArrayList<Integer>(targets);
+        List<NodeData> res = new ArrayList<NodeData>();
+        int src = targetTo.get(0);
+        if (targets.size() == 1)
+            return shortestPath(src, src);
+
+        int dest = targetTo.get(1);
+
+        while (!targetTo.isEmpty()) {
+
+            if (!res.isEmpty() && res.get(res.size() - 1).getKey() == src)
+                res.remove(res.size() - 1);
+            List<NodeData> tmp = shortestPath(src, dest);
+            targetTo.removeAll(nodesToInts(tmp));
+            res.addAll(tmp);
+            if (!targetTo.isEmpty()) {
+                src = dest;
+                dest = targetTo.get(0);
             }
+
         }
-//        System.out.println(tsp.minCost(dist));
-        return dist;
+
+        return res;
     }
-//    public double[][] allShortestDistances() {
-//
-//        double[][] dist = new double[g.nodeSize()][g.nodeSize()];
-//        for (Iterator<NodeData> it = this.getGraph().nodeIter(); it.hasNext(); ) {
-//            NodeData nodeData = it.next();
-//
-//            for (Iterator<EdgeData> iter = this.getGraph().edgeIter(nodeData.getKey()); iter.hasNext(); ) {
-//                EdgeData edge = iter.next();
-//
-//                dist[edge.getSrc()][edge.getDest()] = edge.getWeight();
-//
-//            }
-//
-//            for(int i=0; i <dist.length; i++){
-//                for(int j=0; j<dist.length;j++){
-//                    if(j==i){
-//                        dist[i][j] = 0;
-//                    }else if(i!=j && dist[i][j] ==0){
-//                        dist[i][j] = Integer.MAX_VALUE;
-//                    }
-//
-//
-//
-//                }
-//            }
-//
-//        }
-//
-//        return dist;
-//    }
+
+    private List<Integer> nodesToInts(List<NodeData> list) {
+        List<Integer> ans = new ArrayList<Integer>();
+        for (NodeData n : list) {
+            ans.add(n.getKey());
+        }
+        return ans;
+    }
 
 
     @Override
@@ -373,39 +366,28 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         return false;
     }
 
-//    public AlgorithmsImpl(DirectedWeightedGraph g) {
-//        this.g = g;
-//    }
 
-    public void printMatrix(double[][] dist) {
-
-        for (int i = 0; i < dist.length; i++) {
-            String a = "{ ";
-            for (int j = 0; j < dist.length; j++) {
-                if(dist[i][j] == Integer.MAX_VALUE){
-                    a +="INF ,";
-                }else {
-
-                    a += dist[i][j] + ",";
-                }
-            }
-            a += "}";
-
-            System.out.println(a);
-        }
-
-    }
-    public NodeData findVertex(Point userClick , Range2Range WorldToFrame) {
+    public NodeData findVertex(Point userClick, Range2Range WorldToFrame) {
         for (Iterator<NodeData> it = this.getGraph().nodeIter(); it.hasNext(); ) {
-           NodeDataImpl v = (NodeDataImpl)it.next();
-           NodeDataImpl temp = new NodeDataImpl(v.getLocation() , WorldToFrame);
+            NodeDataImpl v = (NodeDataImpl) it.next();
+            NodeDataImpl temp = new NodeDataImpl(v.getLocation(), WorldToFrame);
 
-            if(temp.getVisualNode().contains(userClick)) {
+            if (temp.getVisualNode().contains(userClick)) {
                 return v;
             }
         }
         return null;
 
+    }
+    private Double getRouteCost(List<NodeData> nodes) {
+        double tempCost = 0;
+        // Add route costs
+
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            tempCost += g.getEdge(nodes.get(i).getKey() , nodes.get(i+1).getKey()).getWeight();
+
+        }
+        return tempCost;
     }
 
     public static void main(String[] args) {
@@ -415,22 +397,23 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         AlgorithmsImpl ag = new AlgorithmsImpl(g);
 
 
-        ag.load("G3.json");
-
-//     ag.printMatrix(ag.allShortestDistances());
+        ag.load("G2.json");
+        List<NodeData> citits = new ArrayList<>();
+//        for (Iterator<NodeData> it = ag.getGraph().nodeIter(); it.hasNext(); ) {
+//            NodeData n = it.next();
+//            citits.add(n);
 //
-//        TSP2 tc = new TSP2(ag.allShortestDistances());
-//        tc.HoxFox();
+//        }
+        citits.add(ag.getGraph().getNode(1));
+        citits.add(ag.getGraph().getNode(2));
+        citits.add(ag.getGraph().getNode(3));
+        citits.add(ag.getGraph().getNode(4));
+        citits.add(ag.getGraph().getNode(5));
+
+        System.out.println("Cost 1: "+ ag.getRouteCost(ag.tsp(citits)) + "->" + ag.tsp(citits));
 
 
-//            ag.tsp.bruteForce();
 
-
-//        System.out.println(ag.getGraph());
-//        System.out.println("Shortest Path -> " + ag.shortestPathDist(0, 7));
-//        System.out.println("Shortest PathList -> " + ag.shortestPath(0, 7));
-//        System.out.println("Center: ->" + ag.center());
-//        System.out.println("isConnected: " + ag.isConnected());
         new GraphFrame(ag);
 
     }

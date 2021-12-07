@@ -174,9 +174,6 @@ class TSP2 {
             tempCost += this.dist[r.getRoute().get(i).getKey()][r.getRoute().get(i + 1).getKey()];
 
 
-//                tempCost += alg.shortestPathDist(r.getRoute().get(i).getKey(), r.getRoute().get(i + 1).getKey());
-
-
         }
         return tempCost;
     }

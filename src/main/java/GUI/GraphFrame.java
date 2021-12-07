@@ -54,7 +54,7 @@ public class GraphFrame extends JFrame  {
     }
     private void setSideMenu() {
 //        sideMenu.setLayout(new GridLayout(9,1));
-        buttons = new JRadioButton[5];
+        buttons = new JRadioButton[6];
         buttons[0] = new JRadioButton("Add Vertex");
         buttons[0].addActionListener(rbl);
         buttons[1] = new JRadioButton("Add Edge");
@@ -65,12 +65,15 @@ public class GraphFrame extends JFrame  {
         buttons[3].addActionListener(rbl);
         buttons[4] = new JRadioButton("CENTER");
         buttons[4].addActionListener(rbl);
+        buttons[5] = new JRadioButton("TSP");
+        buttons[5].addActionListener(rbl);
         JMenu functions = new JMenu("Functions");
         functions.add(buttons[0]);
         functions.add(buttons[1]);
         functions.add(buttons[2]);
         functions.add(buttons[3]);
         functions.add(buttons[4]);
+        functions.add(buttons[5]);
         menuBar.add(functions);
 
     }

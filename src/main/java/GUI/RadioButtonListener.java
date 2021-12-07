@@ -61,6 +61,13 @@ public class RadioButtonListener implements ActionListener {
             System.out.println("----------------CENTER--------------");
 
         }
+        if (e.getSource()==gui.buttons[5]) {
+//            disableUnselectedButtons(5);
+            gui.graphPanel.setRadioButtonState("TSP");
+            gui.graphPanel.setIsEnabled(true);
+            System.out.println("----------------TSP--------------");
+
+        }
         gui.graphPanel.repaint();
     }
 
