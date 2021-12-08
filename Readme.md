@@ -20,6 +20,8 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
 **The jar must be placed in the project's main folder !**
 
+![](images/info.png)
+
 </br>
 
 ## How To Use The GUI
@@ -43,13 +45,13 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
     Adding Nodes & Edges & Is Connceted Algorithm
 
-![](howtouse.gif)
+![](images/howtouse.gif)
 
 </br>
 
     Random Graph
 
-![](randomgraf.gif)
+![](images/randomgraf.gif)
 
 </br>
 
@@ -96,7 +98,7 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
 </br>
 
-![](shortest-path.gif)
+![](images/shortest-path.gif)
 
 
 </br>
