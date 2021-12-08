@@ -1,15 +1,14 @@
 # Graph Theory
+
 ![Builds](https://github.com/project-chip/connectedhomeip/workflows/Builds/badge.svg)
 
 #### A part of a university assignment
 
-
 </br>
 
-
 ## Project Overview
-Implementing weighted graph data structure alongside some known graph algorithms 
-and a simple GUI with JFrame
+
+Implementing weighted graph data structure alongside some known graph algorithms and a simple GUI with JFrame
 
 </br>
 
@@ -19,29 +18,27 @@ and a simple GUI with JFrame
 
     java -jar .\Ex2.jar G1.json
 
+**The jar must be placed in the project's main folder !**
 
 </br>
 
-
-
 ## How To Use The GUI
-
 
 - `Add Node` click anywhere on the canvase and enter a node key or `Graph -> Add Node`
 - `Remove Node :` `Graph -> Remove Node` then enter node key
 - `Add Edge :` drag and drop form two different nodes or `Graph -> Add Edge`
 - `Remove Edge :` drag and drop form two different nodes or `Graph -> Remove Edge`
--  To excute an algorithm `Algorithms -> `
+- To excute an algorithm `Algorithms -> `
 - `Save graph :` `File -> Save` saves the graph as json
 - `Open :` `File -> Open File` opens json graph file
 - `New Graph :` `File -> New Graph` creates an empty graph
 - `Random Graph :` `File -> Random Graph` creates a random graph
 
-
 </br>
 </br>
 
-### Examples 
+### Examples
+
 </br>
 
     Adding Nodes & Edges & Is Connceted Algorithm
@@ -50,110 +47,98 @@ and a simple GUI with JFrame
 
 </br>
 
-
     Random Graph
 
 ![](randomgraf.gif)
 
 </br>
 
-
-
-
 ## What has been done ?
 
-- ### Graph 
+- ### Graph
 
     - Add node
     - Delete node
-    - Add edge 
+    - Add edge
     - Delete edge
-    - iterate through all the nodes 
-    - iterate through all the edges 
+    - iterate through all the nodes
+    - iterate through all the edges
 
-  
-- ### Algorithms 
 
-    - Shortest path between two nodes 
+- ### Algorithms
+
+    - Shortest path between two nodes
     - The center node
     - Travelling salesman problem
     - Strongly connected
 
 
-- ### Json 
-   
+- ### Json
+
     - Load json graph
     - Save graph as json
 
 </br>
 
+## Algorithms Implementation
 
-## Algorithms Implementation 
-
-- `Dijkstra Algorithm` for the shortest path between two nodes O(|V|*|V|)  
-- `Strongly connected components` to check weither the graph
-is connected there must be only **One** strongly connected component O(|V|+|E|)
+- `Dijkstra Algorithm` for the shortest path between two nodes O(|V|*|V|)
+- `Strongly connected components` to check weither the graph is connected there must be only **One** strongly connected
+  component O(|V|+|E|)
 - `center` algorithm using the shortest path O(|V| * |V| * |V|)
-- `TSP` Brute force algorithm trying all possible paths O(N!) 
-
-
+- `TSP` Brute force algorithm trying all possible paths O(N!)
 
 </br>
 
+# Example
 
-# Example 
     Running the shortest path algorithm "Dijkstra Algorithm"  
-</br>
-
-  ![](shortest-path.gif)
-
 
 </br>
 
+![](shortest-path.gif)
 
 
+</br>
 
 # Running Times
 
 - Graph with 1000 nodes 20 edges
-  
-  - Build graph : 7ms
-  - shortest path : 3ms 
-  - is connected : 4ms
-  - tsp (on 4 nodes list) : 97ms
-  - center : (needs more than 20 edges then it will take a long time !) *
 
-
+    - Build graph : 7ms
+    - shortest path : 3ms
+    - is connected : 4ms
+    - tsp (on 4 nodes list) : 97ms
+    - center : (needs more than 20 edges then it will take a long time !) *
 
 
 - Graph with 10000 nodes 20 edges
 
-  - Build graph : 8ms
-  - shortest path : 7ms
-  - is connected : 22ms
-  - tsp (on 4 nodes list) : 393ms
-  - center : (needs more than 20 edges then it will take a long time !) *
+    - Build graph : 8ms
+    - shortest path : 7ms
+    - is connected : 22ms
+    - tsp (on 4 nodes list) : 393ms
+    - center : (needs more than 20 edges then it will take a long time !) *
 
 
 - Graph with 100000 nodes 20 edges
 
-  - Build graph : 49ms
-  - shortest path : 53ms
-  - is connected : 513ms
-  - tsp (on 4 nodes list) : 7378ms
-  - center : (needs more than 20 edges then it will take a long time !) *
+    - Build graph : 49ms
+    - shortest path : 53ms
+    - is connected : 513ms
+    - tsp (on 4 nodes list) : 7378ms
+    - center : (needs more than 20 edges then it will take a long time !) *
 
 
 - Graph with 1000000 nodes 20 edges
 
-  - Build graph : 412ms
-  - shortest path : *
-  - is connected : *
-  - tsp (on 4 nodes list) : *
-  - center : (needs more than 20 edges then it will take a long time !) *
-  
-  </br>
+    - Build graph : 412ms
+    - shortest path : *
+    - is connected : *
+    - tsp (on 4 nodes list) : *
+    - center : (needs more than 20 edges then it will take a long time !) *
 
+  </br>
 
 ## Authors
 
