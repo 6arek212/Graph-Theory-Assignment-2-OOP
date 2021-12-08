@@ -110,7 +110,10 @@ public class GraphPanel extends JPanel implements MouseListener {
         g2d.setColor(n.getNodeState());
         n.setVisualNode(node);
         g2d.fill(node);
+        g.setFont(new Font("David", Font.PLAIN, 15));
         g.drawString("" + n.getKey(), (int) fp.x(), (int) fp.y() - 4 * r);
+
+
     }
 
 
@@ -294,7 +297,9 @@ public class GraphPanel extends JPanel implements MouseListener {
                 nodes.add(graph.getGraph().getNode(keyZ));
                 n--;
             }
+            System.out.println("cities -> "+ nodes);
              List<NodeData> tsp =ag.tsp(nodes);
+            System.out.println(tsp);
 
             for (int i = 0; i <tsp.size(); i++) {
                 NodeDataImpl node = (NodeDataImpl) tsp.get(i);

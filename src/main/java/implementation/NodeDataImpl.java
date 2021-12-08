@@ -17,6 +17,7 @@ public class NodeDataImpl implements NodeData {
     private String info;
     private Shape visualNode;
     private Color nodeState;
+    private boolean isVisit;
 
     private static final int r =5;
 
