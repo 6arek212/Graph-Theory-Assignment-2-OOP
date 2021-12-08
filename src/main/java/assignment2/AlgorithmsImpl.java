@@ -4,18 +4,15 @@ import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.api.EdgeData;
 import assignment2.api.NodeData;
-import assignment2.utils.DirectedGraphFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import assignment2.json_models.DirectedWeightedGraphJson;
 import assignment2.models.NodeDataImpl;
-
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Consumer;
 
 
 public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
@@ -79,7 +76,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      *
      * @param g         directed graph
      * @param node      the starting node
-     * @param nodesList
+     * @param nodesList to store the path
      */
     private void dfsVisit(DirectedWeightedGraph g, NodeData node, List<NodeData> nodesList) {
         node.setTag(NodeDataImpl.GRAY);
@@ -114,7 +111,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      * Algorithm: two DFS call's after the first one invert the edges
      * complexity : O(V+E)
      *
-     * @return
+     * @return is the graph connected True , False
      */
     @Override
     public boolean isConnected() {
@@ -267,8 +264,8 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             targets.add(n.getKey());
         }
 
-        List<Integer> targetTo = new ArrayList<Integer>(targets);
-        List<NodeData> res = new ArrayList<NodeData>();
+        List<Integer> targetTo = new ArrayList<>(targets);
+        List<NodeData> res = new ArrayList<>();
         int src = targetTo.get(0);
         if (targets.size() == 1)
             return shortestPath(src, src);
@@ -299,7 +296,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      * @return nodes list as integers (only keys)
      */
     private List<Integer> nodesToInts(List<NodeData> list) {
-        List<Integer> ans = new ArrayList<Integer>();
+        List<Integer> ans = new ArrayList<>();
         for (NodeData n : list) {
             ans.add(n.getKey());
         }
