@@ -254,55 +254,38 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    //Time Complexity: Worst Case n*(E+V*Log(V))
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
-        if (cities.isEmpty())
-            return null;
 
-        List<Integer> targets = new ArrayList<>();
-        for (NodeData n : cities) {
-            targets.add(n.getKey());
-        }
-
-        List<Integer> targetTo = new ArrayList<>(targets);
-        List<NodeData> res = new ArrayList<>();
-        int src = targetTo.get(0);
-        if (targets.size() == 1)
+        //copy of targets to do adjustments
+        List<NodeData> targetTo = new ArrayList<NodeData>(cities);
+        List<NodeData> res = new ArrayList<NodeData>();
+        int src = targetTo.get(0).getKey();
+        if (cities.size() == 1)
             return shortestPath(src, src);
 
-        int dest = targetTo.get(1);
+        int dest = targetTo.get(1).getKey();
 
         while (!targetTo.isEmpty()) {
-
+            //make sure last node don`t appear twice in the result
             if (!res.isEmpty() && res.get(res.size() - 1).getKey() == src)
                 res.remove(res.size() - 1);
+
+
             List<NodeData> tmp = shortestPath(src, dest);
-            targetTo.removeAll(nodesToInts(tmp));
+            //remove all cities we already visited
+            targetTo.removeAll(tmp);
             res.addAll(tmp);
+            //set the src and dest for the next loop
             if (!targetTo.isEmpty()) {
                 src = dest;
-                dest = targetTo.get(0);
+                dest = targetTo.get(0).getKey();
             }
 
         }
-
         return res;
     }
-
-
-    /**
-     *
-     * @param list of nodes
-     * @return nodes list as integers (only keys)
-     */
-    private List<Integer> nodesToInts(List<NodeData> list) {
-        List<Integer> ans = new ArrayList<>();
-        for (NodeData n : list) {
-            ans.add(n.getKey());
-        }
-        return ans;
-    }
-
 
 
     @Override
