@@ -82,16 +82,13 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      * @param nodesList
      */
     private void dfsVisit(DirectedWeightedGraph g, NodeData node, List<NodeData> nodesList) {
-        List<EdgeData> adj;
-        adj = getAdj(g, node.getKey());
         node.setTag(NodeDataImpl.GRAY);
-
-        for (EdgeData ed : adj) {
+        g.edgeIter(node.getKey()).forEachRemaining((EdgeData ed) -> {
             NodeData nd = g.getNode(ed.getDest());
             if (nd.getTag() == NodeDataImpl.WHITE) {
                 dfsVisit(g, nd, nodesList);
             }
-        }
+        });
         nodesList.add(0, node);
         node.setTag(NodeDataImpl.BLACK);
     }
@@ -108,7 +105,6 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
             if (reversed)
                 return p;
         }
-
         return p;
     }
 
@@ -122,31 +118,13 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
      */
     @Override
     public boolean isConnected() {
-        DirectedWeightedGraph graph = new DirectedWeightedGraphImpl(this.graph);
+        DirectedWeightedGraph graph = copy();
         Iterator<NodeData> iterator = graph.nodeIter();
         List<NodeData> nodes = new ArrayList<>();
         while (iterator.hasNext()) {
             nodes.add(iterator.next());
         }
         return dfs(reverse(graph), dfs(graph, nodes, false), true).size() == graph.nodeSize();
-    }
-
-
-    /**
-     * Gets a list of edges which the src is there source
-     * Complexity : O(|V|)
-     *
-     * @param g   graph
-     * @param src source node key
-     * @return list of edges which the src is there source
-     */
-    private List<EdgeData> getAdj(DirectedWeightedGraph g, int src) {
-        Iterator<EdgeData> iterator = g.edgeIter(src);
-        List<EdgeData> adj = new ArrayList<>();
-        while (iterator.hasNext()) {
-            adj.add(iterator.next());
-        }
-        return adj;
     }
 
 
@@ -176,16 +154,14 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
         Iterator<NodeData> iterator = graph.nodeIter();
 
         //init nodes
-        while (iterator.hasNext()) {
-            NodeData d = iterator.next();
+        iterator.forEachRemaining((NodeData d) -> {
             d.setTag(NodeDataImpl.WHITE);
             if (d.getKey() == src)
                 d.setWeight(0);
             else {
                 d.setWeight(Double.MAX_VALUE);
             }
-        }
-
+        });
 
         //run the algorithm
         HashMap<Integer, NodeData> dist = new HashMap<>();
@@ -196,7 +172,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
 
         while (!nodeQ.isEmpty()) {
             NodeData node = nodeQ.poll();
-            for (EdgeData edge : getAdj(graph, node.getKey())) {
+            graph.edgeIter(node.getKey()).forEachRemaining((EdgeData edge) -> {
                 NodeData connectedto = graph.getNode(edge.getDest());
                 if (connectedto.getTag() == NodeDataImpl.WHITE) {
                     if (node.getWeight() + edge.getWeight() < connectedto.getWeight()) {
@@ -205,7 +181,7 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
                     }
                     nodeQ.add(connectedto);
                 }
-            }
+            });
             node.setTag(NodeDataImpl.BLACK);
         }
 
@@ -281,74 +257,121 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
-    /**
-     * This function gets a list of Nodes and returns all possible permutation
-     * Complexity O(N!) when N is the number of nodes
-     * <p>
-     * this function was taken from StackOverFlow !
-     *
-     * @param list permutate list
-     * @param k    start index
-     * @param res  the result will be added to this list
-     */
-    void permute(List<NodeData> list, int k, List<List<NodeData>> res) {
-        for (int i = k; i < list.size(); i++) {
-            Collections.swap(list, i, k);
-            permute(list, k + 1, res);
-            Collections.swap(list, k, i);
-        }
-        if (k == list.size() - 1) {
-            res.add(list);
-        }
-    }
-
-
-    /**
-     * @param list path list (the nodes not necessarily adjacent)
-     * @return the full path between the nodes in the list
-     */
-    private List<NodeData> pathFrom(List<NodeData> list) {
-        List<NodeData> path = new ArrayList<>();
-        for (int i = 0; i < list.size() - 1; i++) {
-            List<NodeData> p = shortestPath(list.get(i).getKey(), list.get(i + 1).getKey());
-            if (p == null) {
-                return null;
-            }
-            if (i > 0)
-                p.remove(0);
-
-            path.addAll(p);
-        }
-        return path;
-    }
-
     @Override
     public List<NodeData> tsp(List<NodeData> cities) {
         if (cities.isEmpty())
             return null;
 
-        List<List<NodeData>> per = new ArrayList<>();
-        permute(cities, 0, per);
-
-        List<NodeData> currentPath = new ArrayList<>();
-        double minPathCost = Double.MAX_VALUE;
-
-        for (int i = 0; i < per.size() - 1; i++) {
-            List<NodeData> current = pathFrom(per.get(i));
-            if (current != null) {
-                double cost = pathCost(current);
-                if (cost < minPathCost) {
-                    currentPath = current;
-                    minPathCost = cost;
-                }
-            }
+        List<Integer> targets = new ArrayList<>();
+        for (NodeData n : cities) {
+            targets.add(n.getKey());
         }
 
-        if (currentPath.isEmpty())
-            return null;
+        List<Integer> targetTo = new ArrayList<Integer>(targets);
+        List<NodeData> res = new ArrayList<NodeData>();
+        int src = targetTo.get(0);
+        if (targets.size() == 1)
+            return shortestPath(src, src);
 
-        return currentPath;
+        int dest = targetTo.get(1);
+
+        while (!targetTo.isEmpty()) {
+
+            if (!res.isEmpty() && res.get(res.size() - 1).getKey() == src)
+                res.remove(res.size() - 1);
+            List<NodeData> tmp = shortestPath(src, dest);
+            targetTo.removeAll(nodesToInts(tmp));
+            res.addAll(tmp);
+            if (!targetTo.isEmpty()) {
+                src = dest;
+                dest = targetTo.get(0);
+            }
+
+        }
+
+        return res;
     }
+
+
+    private List<Integer> nodesToInts(List<NodeData> list) {
+        List<Integer> ans = new ArrayList<Integer>();
+        for (NodeData n : list) {
+            ans.add(n.getKey());
+        }
+        return ans;
+    }
+
+//
+//    /**
+//     * This function gets a list of Nodes and returns all possible permutation
+//     * Complexity O(N!) when N is the number of nodes
+//     * <p>
+//     * this function was taken from StackOverFlow !
+//     *
+//     * @param list permutate list
+//     * @param k    start index
+//     * @param res  the result will be added to this list
+//     */
+//    void permute(List<NodeData> list, int k, List<List<NodeData>> res) {
+//        for (int i = k; i < list.size(); i++) {
+//            Collections.swap(list, i, k);
+//            permute(list, k + 1, res);
+//            Collections.swap(list, k, i);
+//        }
+//        if (k == list.size() - 1) {
+//            res.add(list);
+//        }
+//    }
+//
+//
+//    /**
+//     * @param list path list (the nodes not necessarily adjacent)
+//     * @return the full path between the nodes in the list
+//     */
+//    private List<NodeData> pathFrom(List<NodeData> list) {
+//        List<NodeData> path = new ArrayList<>();
+//        for (int i = 0; i < list.size() - 1; i++) {
+//            List<NodeData> p = shortestPath(list.get(i).getKey(), list.get(i + 1).getKey());
+//            if (p == null) {
+//                return null;
+//            }
+//            if (i > 0)
+//                p.remove(0);
+//
+//            path.addAll(p);
+//        }
+//        return path;
+//    }
+//
+//    @Override
+//    public List<NodeData> tsp(List<NodeData> cities) {
+//        if (cities.isEmpty())
+//            return null;
+//
+//        List<List<NodeData>> per = new ArrayList<>();
+//        permute(cities, 0, per);
+//
+//        List<NodeData> currentPath = new ArrayList<>();
+//        double minPathCost = Double.MAX_VALUE;
+//
+//        for (int i = 0; i < per.size() - 1; i++) {
+//            List<NodeData> current = pathFrom(per.get(i));
+//            if (current != null) {
+//                double cost = pathCost(current);
+//                if (cost < minPathCost) {
+//                    currentPath = current;
+//                    minPathCost = cost;
+//                }
+//            }
+//        }
+//
+//        if (currentPath.isEmpty())
+//            return null;
+//
+//        return currentPath;
+//    }
+//
+
 
     @Override
     public boolean save(String file) {

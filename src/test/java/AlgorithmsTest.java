@@ -23,6 +23,8 @@ public class AlgorithmsTest {
 
     static DirectedWeightedGraphAlgorithms alg;
 
+
+
     @BeforeAll
     public static void init() {
         alg = new AlgorithmsImpl("G1.json");
