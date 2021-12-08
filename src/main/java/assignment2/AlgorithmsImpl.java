@@ -293,6 +293,11 @@ public class AlgorithmsImpl implements DirectedWeightedGraphAlgorithms {
     }
 
 
+    /**
+     *
+     * @param list of nodes
+     * @return nodes list as integers (only keys)
+     */
     private List<Integer> nodesToInts(List<NodeData> list) {
         List<Integer> ans = new ArrayList<Integer>();
         for (NodeData n : list) {
