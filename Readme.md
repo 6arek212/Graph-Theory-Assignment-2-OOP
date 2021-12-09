@@ -31,7 +31,7 @@ Implementing weighted graph data structure alongside some known graph algorithms
 - `Add Node` click anywhere on the canvase and enter a node key or `Graph -> Add Node`
 - `Remove Node :` `Graph -> Remove Node` then enter node key
 - `Add Edge :` drag and drop form two different nodes or `Graph -> Add Edge`
-- `Remove Edge :` drag and drop form two different nodes or `Graph -> Remove Edge`
+- `Remove Edge :` `Graph -> Remove Edge`
 - To excute an algorithm `Algorithms -> `
 - `Save graph :` `File -> Save` saves the graph as json
 - `Open :` `File -> Open File` opens json graph file
