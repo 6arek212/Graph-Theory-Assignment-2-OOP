@@ -88,7 +88,7 @@ Implementing weighted graph data structure alongside some known graph algorithms
 - `Strongly connected components` to check weither the graph is connected there must be only **One** strongly connected
   component O(|V|+|E|)
 - `center` algorithm using the shortest path O(|V| * |V| * |V|)
-- `TSP` Brute force algorithm trying all possible paths O(N!)
+- `TSP` back-tracking algorithm N*(E+V*Log(V))
 
 </br>
 
