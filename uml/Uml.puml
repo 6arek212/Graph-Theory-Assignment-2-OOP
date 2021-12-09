@@ -1,0 +1,88 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+
+class GraphViewFame{
+             -final static int WIDTH = 1000
+             -final static int HEIGHT = 700
+             -GraphViewModel controller
+             -JLabel numberOfNodes
+             -JLabel numberOfEdges
+             -ActionListener actionListener
+             -GraphViewPanel panel
+}
+GraphViewFame  "1"--"1"  GraphViewPanel
+
+
+
+
+class GraphViewPanel{
+           + static final int radios = 20;
+           + static final int padding = 70;
+           + Range2Range world2Frame;
+           - GraphViewModel controller;
+}
+
+GraphViewPanel "1" *--* "1" GraphViewModel
+
+interface ActionListener{
+    void actionEvent(UIEvents event);
+}
+
+GraphViewFame  *--  ActionListener
+
+GraphViewModel  --*  ActionListener
+
+class GraphViewModel{
+        onTriggerEvent(GraphEvents event)
+        getNodeByCoordinates(Range2Range range, double x, double y)
+        void randomGraph()
+        void addEdge(int src, int dest, double w)
+        void deleteEdge(int src, int dest)
+        void addNode(int key, double x, double y)
+        void removeNode(int key)
+         void tsp(List<Integer> cities)
+         void isConnected()
+          void center()
+          void initNodeEdges()
+          void shortestPath(int src, int dest)
+          void initTags()
+          void shortestPathDist(int src, int dest)
+}
+
+
+GraphViewModel "1" *--* "1" DirectedWeightedGraphAlgorithms
+
+
+interface DirectedWeightedGraphAlgorithms{
+    + DirectedWeightedGraph getGraph();
+    + DirectedWeightedGraph copy();
+    + boolean isConnected();
+    + double shortestPathDist(int src, int dest);
+    + List<NodeData> shortestPath(int src, int dest);
+    + NodeData center();
+    + List<NodeData> tsp(List<NodeData> cities);
+    + boolean save(String file);
+    + boolean load(String file);
+}
+
+
+DirectedWeightedGraphAlgorithms "1" *--* "1" DirectedWeightedGraph
+
+interface DirectedWeightedGraph{
+   	public EdgeData getEdge(int src, int dest);
+   	public void addNode(NodeData n);
+   	public void connect(int src, int dest, double w);
+   	public Iterator<NodeData> nodeIter();
+   	public Iterator<EdgeData> edgeIter();
+   	public Iterator<EdgeData> edgeIter(int node_id);
+   	public NodeData removeNode(int key);
+   	public EdgeData removeEdge(int src, int dest);
+   	public int nodeSize();
+   	public int edgeSize();
+   	public int getMC();
+}
+
+
+
+@enduml

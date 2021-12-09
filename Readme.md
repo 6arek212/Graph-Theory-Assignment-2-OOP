@@ -10,6 +10,8 @@
 
 Implementing weighted graph data structure alongside some known graph algorithms and a simple GUI with JFrame
 
+![img.png](uml/img.png)
+
 </br>
 
 ## How To Run
