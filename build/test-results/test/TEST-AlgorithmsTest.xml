@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="AlgorithmsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-12-07T19:35:13" hostname="DESKTOP-EF6V8S9" time="0.06">
+  <properties/>
+  <testcase name="add1000Nodes()" classname="AlgorithmsTest" time="0.06"/>
+  <system-out><![CDATA[Seed number 1
+totalTime 45
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
