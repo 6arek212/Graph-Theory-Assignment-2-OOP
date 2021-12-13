@@ -4,6 +4,10 @@ import assignment2.api.DirectedWeightedGraph;
 import assignment2.api.DirectedWeightedGraphAlgorithms;
 import assignment2.ui.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
@@ -11,8 +15,6 @@ import java.nio.file.Paths;
  * This class is the main class for Ex2 - your implementation will be tested using this class.
  */
 public class Ex2 {
-    private static final String path = Paths.get("").toAbsolutePath() + "/src/main/java/assignment2/data/";
-
 
     /**
      * This static function will be used to test your implementation
@@ -21,7 +23,8 @@ public class Ex2 {
      * @return
      */
     public static DirectedWeightedGraph getGrapg(String json_file) {
-        return DirectedWeightedGraphImpl.load(path + json_file);
+        String absolutePath = FileSystems.getDefault().getPath(json_file).normalize().toAbsolutePath().toString();
+        return DirectedWeightedGraphImpl.load(absolutePath);
     }
 
 
