@@ -18,9 +18,11 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
 `From the terminal : `
 
-    java -jar .\Ex2.jar G1.json
+    java -jar .\Ex2.jar .\G1.json
 
-**The jar must be placed in the project's main folder !**
+**verison 3.0** The jar must be placed in the project's main folder !
+
+**verison 4.0** support relative path (fix the above) !
 
 ![](images/info.png)
 
