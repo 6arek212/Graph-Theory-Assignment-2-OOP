@@ -51,7 +51,7 @@ public class Ex2 {
 
 
     public static void main(String[] args) {
-        //runGUI("G1.json");
+        //runGUI("./data/G1.json");
         try {
             runGUI(args[0]);
         } catch (ArrayIndexOutOfBoundsException e) {
