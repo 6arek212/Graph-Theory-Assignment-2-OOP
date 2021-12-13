@@ -22,9 +22,8 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
 **verison 3.0** The jar must be placed in the project's main folder !
 
-**verison 4.0** support relative path (fix the above) !
+**verison 4.0** support relative path (fix the above) (if running through intellij make sure to change "Working directory"") !
 
-![](images/info.png)
 
 </br>
 
