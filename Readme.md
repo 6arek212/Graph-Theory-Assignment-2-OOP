@@ -18,11 +18,12 @@ Implementing weighted graph data structure alongside some known graph algorithms
 
 `From the terminal : `
 
-    java -jar .\Ex2.jar G1.json
+    java -jar .\Ex2.jar .\G1.json
 
-**The jar must be placed in the project's main folder !**
+**verison 3.0** The jar must be placed in the project's main folder !
 
-![](images/info.png)
+**verison 4.0** support relative path (fix the above) (if running through intellij make sure to change "Working directory"") !
+
 
 </br>
 
@@ -31,7 +32,7 @@ Implementing weighted graph data structure alongside some known graph algorithms
 - `Add Node` click anywhere on the canvase and enter a node key or `Graph -> Add Node`
 - `Remove Node :` `Graph -> Remove Node` then enter node key
 - `Add Edge :` drag and drop form two different nodes or `Graph -> Add Edge`
-- `Remove Edge :` drag and drop form two different nodes or `Graph -> Remove Edge`
+- `Remove Edge :` `Graph -> Remove Edge`
 - To excute an algorithm `Algorithms -> `
 - `Save graph :` `File -> Save` saves the graph as json
 - `Open :` `File -> Open File` opens json graph file
